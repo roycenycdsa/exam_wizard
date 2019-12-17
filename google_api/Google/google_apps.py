@@ -145,7 +145,7 @@ class GDrive:
 
     def list_files(self):
         results = self.service.files().list(
-            pageSize=10, fields='nextPageToken, files(id, name)').execute()
+            pageSize=1000, fields='nextPageToken, files(id, name)').execute()
         items = results.get('files', [])
 
         if not items:
@@ -153,20 +153,38 @@ class GDrive:
         else:
             print('Files:')
             for item in items:
-                print(f"{item['name']}, {item['id']}")
+                print(item['name'] + ':\t ' + item['id'])
 
-    def upload_file(self, file):
+    def upload_file(self, file, domain_only=True):
         #Uploads a file
         #Returns sharing link
-        file_metadata = {
-            'name': file,
-            'mimeType': '*/*'
-        }
-        media = MediaFileUpload(file, mimetype='*/*', resumable=True)
-        # Upload
-        file = self.service.files().create(body=file_metadata, media_body=media, fields='id').execute()
-        print('File Uploaded. File ID:' + file.get('id'))
-        # Check file permissions
-        link = self.service.files().get(fileId=file.get('id'), fields='webContentLink').execute()['webContentLink']
-        return link
 
+        #Upload file to Drive
+        file_metadata = {'name': file, 'mimeType': '*/*'}
+        media = MediaFileUpload(file, mimetype='*/*', resumable=True)
+        file = self.service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+        file_id = file.get('id')
+
+        if domain_only:
+            #Update Domain Permission on Drive
+            permission = {
+                'type': 'domain',
+                'domain': 'nycdatascience.com',
+                'role': 'reader',
+                'allowFileDiscovery': False
+            }
+            self.service.permissions().create(fileId=file_id, body=permission).execute()
+        else:
+            permission = {
+                'type': 'anyone',
+                'role': 'writer'
+            }
+            self.service.permissions().create(fileId=file_id, body=permission).execute()
+
+        return self.service.files().get(fileId=file.get('id'), fields='webContentLink').execute()['webContentLink']
+
+    def get_metadata(self, fid, pid=None):
+        att = self.service.files().get(fileId=id, fields='*').execute()
+        for k, v in att.items():
+            print(k, '\t', v)
+        return None
