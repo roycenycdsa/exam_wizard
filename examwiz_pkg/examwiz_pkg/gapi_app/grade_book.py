@@ -1,7 +1,7 @@
 from ..gapi_utils import st_service, dv_service, ap_service, ml_service
 from apiclient import errors
 import pandas as pd
-
+import os, shutil, json
 
 def create_grade_book(name, in_domain=True):
     # Creates a new google spreadsheet to hold exam grades
@@ -64,3 +64,9 @@ def get_link(file_id, link_type='view'):
 
 def send_form(link, ta_email, exams):
     pass
+
+def fresh_start():
+    if os.path.exists('demo/demo files/anon_student_exams/'):
+        shutil.rmtree('demo/demo files/anon_student_exams')
+        os.remove('demo/demo files/conversion_key.csv')
+    return None

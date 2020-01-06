@@ -4,13 +4,6 @@ import os.path
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
-from apiclient.http import MediaFileUpload
-import mimetypes
-
 import yaml
 
 mod_path = "/".join(__file__.split("/")[:-2])
