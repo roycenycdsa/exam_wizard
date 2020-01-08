@@ -1,7 +1,7 @@
 from ..gapi_utils import st_service, dv_service, ap_service, ml_service
 from apiclient import errors
 import pandas as pd
-import os, shutil, json
+import os, shutil, ast
 
 def create_grade_book(name, in_domain=True):
     # Creates a new google spreadsheet to hold exam grades
@@ -65,8 +65,23 @@ def get_link(file_id, link_type='view'):
 def send_form(link, ta_email, exams):
     pass
 
-def fresh_start():
-    if os.path.exists('demo/demo files/anon_student_exams/'):
-        shutil.rmtree('demo/demo files/anon_student_exams')
-        os.remove('demo/demo files/conversion_key.csv')
+def fresh_start(path):
+    if os.path.exists(path + '/anon_student_exams'):
+        shutil.rmtree(path + '/anon_student_exams')
+        os.remove(path + '/conversion_key.csv')
     return None
+
+def needs_grading(file_id, key_path):
+    df = read_grade_book(file_id)
+    st = pd.read_csv(key_path)
+
+    ids = set([str(i) for i in st['temp_id'].values])
+    done = set([str(i) for i in df['Student ID'].values])
+
+    return [int(i) for i in ids - done]
+
+def assigned_tas(test_id, exam_id, wkld_path):
+    # Given a test id and a gradebook, find the ta who is supposed to grade it.
+    wkld = pd.read_csv(wkld_path)
+    wkld['workload'] = wkld.apply(lambda l: [os.path.splitext(i)[0] for i in ast.literal_eval(l.workload)], axis=1)
+
