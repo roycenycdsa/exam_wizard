@@ -3,16 +3,56 @@ from fpdf import FPDF
 import pandas as pd
 
 
-def process_gradebook(df, questions, exam_tag):
+def percentile(lst):
+    '''
+    Takes a list and produces percentile numbers for said list.
+    lst: A list of numbers to convert to percentiles
 
+    Returns a dictonary containing the score and what percentile that
+    score comapares to.
+    percentile_scores: a dictonary where the keys are the scores, and the
+    values are the percentile numbers.
+
+    ex:
+    If we have [0,0,1,1,2,3] as our lst, we would get the following output:
+
+    process_gradebook = {'0' : 16.67,
+                         '1' : 50.00,
+                         '2' : 75.00,
+                         '3' : 91.67}
+    '''
+    lst = pd.to_numeric(lst)
+    temp = lst.sort_values()
+    temp = temp.astype(str)
+
+    percentile_scores = {}
+    i = 0
+    for val in temp.unique():
+        equal_rank = len(temp[temp == val])
+
+        percentile_scores[val] = round((i + (0.5*equal_rank))/len(temp) * 100, 2)
+        i += equal_rank
+
+    return percentile_scores
+
+def process_gradebook(df, questions, exam_tag):
+    '''
+    
+    '''
     exam_ids = df['Exam ID']
 
+    percentile_list = {}
+    for question in questions.items():
+        percentile_list[question[0]] = percentile(df[question[0]])
+
+    percentile_list['total'] = percentile(df['Total Score'])
+
     for exam_id in exam_ids:
-        process_single_report(exam_id, df, questions, exam_tag)
+        process_single_report(exam_id, df, questions, exam_tag, percentile_list)
 
     pass
 
-def process_single_report(exam_id, df, questions, exam_tag):
+def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
 
     student_exam = df[df['Exam ID'] == exam_id]
 
@@ -45,7 +85,7 @@ def process_single_report(exam_id, df, questions, exam_tag):
     pdf.cell(200, 8, txt="Overall: {} out of 25".format(student_exam['Total Score'].iloc[0]), ln = 1, align="C")
     pdf.set_font("Arial", size = 12)
     pdf.ln(2)
-    pdf.cell(200, 8, txt="Which places you at the [placeholder] percentile.", align = "C")
+    pdf.cell(200, 8, txt="Which places you at the {} percentile.".format(percentile_list['total'][student_exam['Total Score'].iloc[0]]), align = "C")
     pdf.ln(18)
 
     pdf.line(10, 100, 200, 100)
@@ -70,6 +110,8 @@ def process_single_report(exam_id, df, questions, exam_tag):
         y_space = pdf.get_y()
         i += 2
         pdf.line(10, y_space, 200, y_space)
+
+
 
     pdf.output(file_name)
     pass
