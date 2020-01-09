@@ -37,7 +37,16 @@ def percentile(lst):
 
 def process_gradebook(df, questions, exam_tag):
     '''
-    
+    Process an entire gradebook into PDFs.
+    Takes:
+    df: A gradebook downloaded into a dataframe.
+    questions: A dictonary of questions pertaining to that specific exam.
+    exam_tag: what the reports will be tagged with, will eventually become the
+              flag to choose which 'questions' set up should be used.
+
+    Returns:
+    Nothing, but produces as many PDFs as lines in the gradebook. They are saved
+    to './reports/'.
     '''
     exam_ids = df['Exam ID']
 
@@ -53,6 +62,25 @@ def process_gradebook(df, questions, exam_tag):
     pass
 
 def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
+    '''
+    Processes a single row of the dataframe (usually denoted gradebook) based
+    on exam_id. Produces a PDF that is placed in './reports/'.
+    This can be run by itself, but most of the time will be called by the
+    function above.
+
+    Takes:
+    exam_id: the unique exam ID that needs to be processed. (string)
+    df: the gradebook in question (pandas.DataFrame)
+    questions: format of the exam (stored as dictonary)
+    exam_tag: what the exam should be tagged as. Will eventually be how the
+              structure of the exam is determined.
+    percentile_list: A list generated from the above function, percentile().
+                     It contains what percentiles the individual scores are,
+                     and they are linked via a dictonary format.
+
+    Return:
+    Nothing, just produces a PDF report in the subfolder "./reports/".
+    '''
 
     student_exam = df[df['Exam ID'] == exam_id]
 
@@ -113,5 +141,5 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
 
 
 
-    pdf.output(file_name)
+    pdf.output("./reports/" + file_name)
     pass
