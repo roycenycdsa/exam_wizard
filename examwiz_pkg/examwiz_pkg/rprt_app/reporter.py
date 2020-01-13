@@ -1,5 +1,6 @@
 from examwiz_pkg.examwiz_pkg.gapi_utils import ml_service, dv_service, st_service
 from fpdf import FPDF
+import os
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -18,12 +19,12 @@ def produce_hist(gradebook_column, student_score, question, file_tag = ""):
     scores = gradebook_column.unique().astype(str)
     scores.sort()
     student_score = str(student_score)
-    print(question)
-    print("using ", scores, " as scores")
-    print("using ", student_score, " as student score")
+    # print(question)
+    # print("using ", scores, " as scores")
+    # print("using ", student_score, " as student score")
 
     clrs = ['red' if x == student_score else 'grey' for x in scores]
-    print("We are using ", clrs, " to color ", question)
+    # print("We are using ", clrs, " to color ", question)
     sns.set_style("whitegrid")
     red_patch = mpatches.Patch(color = 'red', label = 'Your Score')
     student_score = sns.countplot(gradebook_column, palette=clrs)
@@ -32,8 +33,11 @@ def produce_hist(gradebook_column, student_score, question, file_tag = ""):
     student_score.yaxis.set_major_locator(MaxNLocator(integer = True))
     student_score.legend(handles=[red_patch])
 
+    if not os.path.isdir("./demo/example_exam/reports/images/"):
+        os.makedirs("./demo/example_exam/reports/images/")
+
     temp = student_score.get_figure()
-    temp.savefig("./images/" + file_tag + "temp_report.png")
+    temp.savefig("./demo/example_exam/reports/images/" + file_tag + "temp_report.png")
 
     return student_score
 
@@ -121,7 +125,7 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
     student_name = exam_id
     grader = student_exam['Grader'].iloc[0]
     exam = exam_tag
-    file_name = student_name+" "+exam+".pdf"
+    file_name = student_name+"_"+exam+".pdf"
 
     intro = "\t\t\t\tThis is your exam report for the {}. Your grader was {}, so please feel free to reach out to them if you have additional questions about the exam, or any of the grades you received."
 
@@ -167,7 +171,7 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
 
         produce_hist(df[question[0]], student_exam.iloc[0, i], question[0], file_tag = question[0])
 
-        pdf.image("./images/" + question[0] + "temp_report.png", x = 53, w = 100)
+        pdf.image("./demo/example_exam/reports/images/" + question[0] + "temp_report.png", x = 53, w = 100)
 
 
         if int(student_exam.iloc[0,i]) < 3:
@@ -183,5 +187,5 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
 
 
 
-    pdf.output("./reports/" + file_name)
+    pdf.output("./demo/example_exam/reports/" + file_name)
     pass
