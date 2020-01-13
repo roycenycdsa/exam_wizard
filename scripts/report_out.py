@@ -1,11 +1,10 @@
 import sys
-sys.path.append('..')
-from examwiz_pkg.examwiz_pkg.gapi_app import reporter as rp
+sys.path.append('.')
+from examwiz_pkg.examwiz_pkg.rprt_app import reporter as rp
 from examwiz_pkg.examwiz_pkg.gapi_app import grade_book as gb
-import pandas as pd
-
 
 exam_id = input("Please enter in the ID of the gradebook you would like to make reports out of.\n")
+exam_id = '1EslwwOrJuor0NyolZTmkQHe6Dc7oN2Ta3TZatuq_Qnc'
 
 gradebook = gb.read_grade_book(exam_id)
 

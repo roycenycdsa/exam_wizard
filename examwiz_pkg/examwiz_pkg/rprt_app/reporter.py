@@ -1,4 +1,4 @@
-from ..gapi_utils import ml_service, dv_service, st_service
+from examwiz_pkg.examwiz_pkg.gapi_utils import ml_service, dv_service, st_service
 from fpdf import FPDF
 import pandas as pd
 import seaborn as sns
@@ -82,7 +82,7 @@ def process_gradebook(df, questions, exam_tag):
     Nothing, but produces as many PDFs as lines in the gradebook. They are saved
     to './reports/'.
     '''
-    exam_ids = df['Exam ID']
+    exam_ids = df['Student ID']
 
     percentile_list = {}
     for question in questions.items():
@@ -130,7 +130,7 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
 
     pdf = FPDF()
     pdf.add_page()
-    pdf.image("./nycdsalogo.png", x=55, y=8, w=100)
+    pdf.image("./structure_files/nycdsalogo.png", x=55, y=8, w=100)
 
     pdf.set_line_width(0.5)
     pdf.set_fill_color(255, 0, 0)

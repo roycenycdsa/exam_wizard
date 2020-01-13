@@ -1,4 +1,6 @@
 import pandas as pd
+import sys
+sys.path.append('.')
 from examwiz_pkg.examwiz_pkg.gapi_app import mailer as ml
 from examwiz_pkg.examwiz_pkg.anon_app import anonymizer as an
 
