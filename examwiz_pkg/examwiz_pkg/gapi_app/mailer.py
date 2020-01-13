@@ -6,7 +6,6 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 import mimetypes
 
-
 def create_message(sender, to, subject, msg):
     message = MIMEText(msg)
     message['to'] = to
@@ -24,8 +23,8 @@ def create_attached_message(sender, to, subject, msg, file_dir, filenames=[]):
     message.attach(msg)
 
     for file in filenames:
-        path = os.path.join(file_dir, file)
-        content_type, encoding =mimetypes.guess_type(path)
+        path = os.path.join(file_dir, str(file))
+        content_type, encoding = mimetypes.guess_type(path)
 
         if content_type is None or encoding is not None:
             content_type = 'application/octet-stream'
@@ -51,7 +50,6 @@ def create_attached_message(sender, to, subject, msg, file_dir, filenames=[]):
 
         msg.add_header('Content-Disposition', 'attachment', filename=file)
         message.attach(msg)
-
     return {'raw': base64.urlsafe_b64encode(message.as_string().encode()).decode()}
 
 def send_message(message):
@@ -68,4 +66,28 @@ def get_ta_emails(fp):
             if ta['active'] == 'True':
                 names.append(ta['name'])
                 emails.append(ta['email'])
-    return names, emails
+    return list(zip(names, emails))
+
+def send_reminder(ta, exams, key, form_link):
+    with open(key, 'r') as f:
+        f.read
+
+    msg = create_attached_message(
+        sender='charles.cohen@nycdatascience.com',
+        to=ta[0],
+        subject='Exams remain to be graded',
+        msg=f"""Hi {ta[1]},
+You have exams that remain to be graded.
+Please submit the grades here: {form_link}
+If you received this email in error, please contact the bootcamp coordinator.""",
+        file_dir='example_exam/anon_student_exams_perm/',
+        filenames=exams
+    )
+    send_message(msg)
+
+def grade_these(name, link):
+    """Pre-Written Script 'grade these exams' for Mailer."""
+    return f"Hi {name},\n" \
+           f"Here are the R Midterm student exams.\n" \
+           f"Please submit your grade to them promptly.\n" \
+           f"Here is the submission form link: {link}"

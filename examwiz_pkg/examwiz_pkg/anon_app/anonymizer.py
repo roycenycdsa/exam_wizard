@@ -16,10 +16,8 @@ def make_anon(loc):
         pass
     os.chdir(main_path)
     new_path = loc + '/../anon_student_exams'
+
     conversion = []
-
-
-
     for file in list_files(loc):
         temp_id = np.random.randint(1000, 9999)
         file_type = file[re.search('[.]', file).span()[0]:]
@@ -37,3 +35,9 @@ def make_anon(loc):
 
 def read_key(key_path):
     return pd.read_csv(key_path)
+
+def fresh_start(path):
+    if os.path.exists(path + '/../anon_student_exams'):
+        shutil.rmtree(path + '/../anon_student_exams')
+        os.remove(path + '/../conversion_key.csv')
+    return None
