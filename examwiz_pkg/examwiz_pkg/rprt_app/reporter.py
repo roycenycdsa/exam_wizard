@@ -86,7 +86,7 @@ def process_gradebook(df, questions, exam_tag):
     Nothing, but produces as many PDFs as lines in the gradebook. They are saved
     to './reports/'.
     '''
-    exam_ids = df['Student ID']
+    exam_ids = df['Student ID'].unique()
 
     percentile_list = {}
     for question in questions.items():
@@ -94,9 +94,14 @@ def process_gradebook(df, questions, exam_tag):
 
     percentile_list['total'] = percentile(df['Total Score'])
 
-    for exam_id in exam_ids:
-        process_single_report(exam_id, df, questions, exam_tag, percentile_list)
+    num_of_ids = len(exam_ids)
+    i = 1
 
+    for exam_id in exam_ids:
+        print("Processing exam: ", exam_id)
+        print(i, " of ", num_of_ids)
+        process_single_report(exam_id, df, questions, exam_tag, percentile_list)
+        i += 1
     pass
 
 def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
@@ -122,8 +127,10 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
 
     student_exam = df[df['Student ID'] == exam_id]
 
+    student_exam = student_exam.iloc[-1]
+
     student_name = exam_id
-    grader = student_exam['Grader'].iloc[0]
+    grader = student_exam['Grader']
     exam = exam_tag
     file_name = student_name+"_"+exam+".pdf"
 
@@ -140,46 +147,46 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
     pdf.set_fill_color(255, 0, 0)
     pdf.line(10, 35, 200, 35)
 
-    pdf.set_font("Arial", size=12)
+    pdf.set_font("Arial", size=10)
     pdf.ln(30)
     pdf.cell(200, 6, txt="Hello {},".format(student_name), ln=1, align="L")
     pdf.ln(2)
-    pdf.multi_cell(190, 8, txt=intro.format(exam, grader), align = "L")
+    pdf.multi_cell(190, 6, txt=intro.format(exam, grader), align = "L")
 
     pdf.ln(5)
-    pdf.set_font("Arial", size = 14)
-    pdf.cell(190, 8, txt="Overall: {} out of 25".format(student_exam['Total Score'].iloc[0]), ln = 1, align="C")
     pdf.set_font("Arial", size = 12)
+    pdf.cell(190, 8, txt="Overall: {} out of 25".format(student_exam['Total Score']), ln = 1, align="C")
+    pdf.set_font("Arial", size = 10)
     pdf.ln(2)
     #pdf.cell(200, 8, txt="Which places you at the {} percentile.".format(percentile_list['total'][student_exam['Total Score'].iloc[0]]), align = "C")
-    pdf.ln(18)
+    pdf.ln(10)
 
-    pdf.line(10, 100, 200, 100)
+    pdf.line(10, 80, 200, 80)
 
     i = 1
 
     for question in questions.items():
 
-        pdf.ln(2)
-        pdf.set_font("Arial", size = 14)
+        pdf.ln(1)
+        pdf.set_font("Arial", size = 12)
         pdf.cell(190, 8, txt=question[0]+": "+question[1], align = "C")
 
-        pdf.set_font("Arial", size = 12)
+        pdf.set_font("Arial", size = 10)
         pdf.ln(6)
-        pdf.cell(190, 8, txt="Score: {}/5".format(student_exam.iloc[0, i]), align = "C")
+        pdf.cell(190, 8, txt="Score: {}/5".format(student_exam[i]), align = "C")
         pdf.ln(10)
 
-        produce_hist(df[question[0]], student_exam.iloc[0, i], question[0], file_tag = question[0])
+        produce_hist(df[question[0]], student_exam[i], question[0], file_tag = question[0])
 
         pdf.image("./demo/example_exam/reports/images/" + question[0] + "temp_report.png", x = 53, w = 100)
 
 
-        if int(student_exam.iloc[0,i]) < 3:
+        if int(student_exam[i]) < 3:
             pdf.ln(6)
             pdf.multi_cell(190, 6, txt="Instructor Comment: {}".format(temp_comment))
         else:
             pdf.ln(6)
-        pdf.multi_cell(190, 6, txt="TA Comment: {}".format(student_exam.iloc[0, i+1]))
+        pdf.multi_cell(190, 6, txt="TA Comment: {}".format(student_exam[i+1]))
         pdf.ln(2)
         y_space = pdf.get_y()
         i += 2
