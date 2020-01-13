@@ -1,7 +1,41 @@
 from ..gapi_utils import ml_service, dv_service, st_service
 from fpdf import FPDF
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+from matplotlib.ticker import MaxNLocator
 
+def produce_hist(gradebook_column, student_score, question, file_tag = ""):
+    '''
+    Takes a gradebook column, a student's score, and the question in order to produce
+    a detailed graph pertaining to their score on the exam.
+    '''
+
+    # clear working space
+    plt.gcf().clf()
+
+    scores = gradebook_column.unique().astype(str)
+    scores.sort()
+    student_score = str(student_score)
+    print(question)
+    print("using ", scores, " as scores")
+    print("using ", student_score, " as student score")
+
+    clrs = ['red' if x == student_score else 'grey' for x in scores]
+    print("We are using ", clrs, " to color ", question)
+    sns.set_style("whitegrid")
+    red_patch = mpatches.Patch(color = 'red', label = 'Your Score')
+    student_score = sns.countplot(gradebook_column, palette=clrs)
+    plt.ylabel("# of Students")
+    plt.xlabel("Score out of 5")
+    student_score.yaxis.set_major_locator(MaxNLocator(integer = True))
+    student_score.legend(handles=[red_patch])
+
+    temp = student_score.get_figure()
+    temp.savefig("./images/" + file_tag + "temp_report.png")
+
+    return student_score
 
 def percentile(lst):
     '''
@@ -82,7 +116,7 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
     Nothing, just produces a PDF report in the subfolder "./reports/".
     '''
 
-    student_exam = df[df['Exam ID'] == exam_id]
+    student_exam = df[df['Student ID'] == exam_id]
 
     student_name = exam_id
     grader = student_exam['Grader'].iloc[0]
@@ -110,10 +144,10 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
 
     pdf.ln(5)
     pdf.set_font("Arial", size = 14)
-    pdf.cell(200, 8, txt="Overall: {} out of 25".format(student_exam['Total Score'].iloc[0]), ln = 1, align="C")
+    pdf.cell(190, 8, txt="Overall: {} out of 25".format(student_exam['Total Score'].iloc[0]), ln = 1, align="C")
     pdf.set_font("Arial", size = 12)
     pdf.ln(2)
-    pdf.cell(200, 8, txt="Which places you at the {} percentile.".format(percentile_list['total'][student_exam['Total Score'].iloc[0]]), align = "C")
+    #pdf.cell(200, 8, txt="Which places you at the {} percentile.".format(percentile_list['total'][student_exam['Total Score'].iloc[0]]), align = "C")
     pdf.ln(18)
 
     pdf.line(10, 100, 200, 100)
@@ -122,12 +156,20 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
 
     for question in questions.items():
 
+        pdf.ln(2)
         pdf.set_font("Arial", size = 14)
-        pdf.cell(200, 8, txt=question[0]+": "+question[1], align = "C")
+        pdf.cell(190, 8, txt=question[0]+": "+question[1], align = "C")
 
         pdf.set_font("Arial", size = 12)
-        pdf.ln(4)
-        pdf.cell(200, 8, txt="Score: {}/5".format(student_exam.iloc[0, i]))
+        pdf.ln(6)
+        pdf.cell(190, 8, txt="Score: {}/5".format(student_exam.iloc[0, i]), align = "C")
+        pdf.ln(10)
+
+        produce_hist(df[question[0]], student_exam.iloc[0, i], question[0], file_tag = question[0])
+
+        pdf.image("./images/" + question[0] + "temp_report.png", x = 53, w = 100)
+
+
         if int(student_exam.iloc[0,i]) < 3:
             pdf.ln(6)
             pdf.multi_cell(190, 6, txt="Instructor Comment: {}".format(temp_comment))
