@@ -62,15 +62,6 @@ def get_link(file_id, link_type='view'):
     else:
         return get_metadata(file_id)['webViewLink']
 
-def send_form(link, ta_email, exams):
-    pass
-
-def fresh_start(path):
-    if os.path.exists(path + '/anon_student_exams'):
-        shutil.rmtree(path + '/anon_student_exams')
-        os.remove(path + '/conversion_key.csv')
-    return None
-
 def needs_grading(file_id, key_path):
     df = read_grade_book(file_id)
     st = pd.read_csv(key_path)
@@ -80,8 +71,12 @@ def needs_grading(file_id, key_path):
 
     return [int(i) for i in ids - done]
 
-def assigned_tas(test_id, exam_id, wkld_path):
+def assigned_to(test_id, exam_id, wkld_path):
     # Given a test id and a gradebook, find the ta who is supposed to grade it.
     wkld = pd.read_csv(wkld_path)
     wkld['workload'] = wkld.apply(lambda l: [os.path.splitext(i)[0] for i in ast.literal_eval(l.workload)], axis=1)
+    return wkld[list(map(lambda l: str(test_id) in l, wkld['workload'].values))][['ta', 'email']]
 
+def get_file_path(test_id, key_path):
+    df = pd.read_csv(key_path)
+    return df.loc[df['temp_id'] == int(test_id)]['new'].iloc[0]
