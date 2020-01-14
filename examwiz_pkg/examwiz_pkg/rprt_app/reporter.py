@@ -3,9 +3,35 @@ from fpdf import FPDF
 import os
 import pandas as pd
 import seaborn as sns
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.ticker import MaxNLocator
+
+def produce_distplot(gradebook_column, student_score, file_tag = ""):
+
+    plt.gcf().clf()
+
+    sns.set_style('whitegrid')
+
+    print(gradebook_column, "gradebook column")
+    print(student_score)
+    n, bins, patches = plt.hist(gradebook_column.astype(int),
+                                bins = np.arange(0, 26, 1), density = True, color = 'grey')
+    dist_curve = sns.distplot(gradebook_column.astype(int), hist=False)
+
+    patches[student_score].set_fc('r')
+    plt.xlabel("Score out of 25")
+    plt.xlim([0,26])
+
+    red_patch = mpatches.Patch(color = 'red', label = 'Your Score')
+    dist_curve.legend(handles=[red_patch])
+
+    if not os.path.isdir("./demo/example_exam/reports/images/"):
+        os.makedirs("./demo/example_exam/reports/images/")
+
+    temp = dist_curve.get_figure()
+    temp.savefig("./demo/example_exam/reports/images/" + file_tag + "temp_report.png")
 
 def produce_hist(gradebook_column, student_score, question, file_tag = ""):
     '''
@@ -30,6 +56,7 @@ def produce_hist(gradebook_column, student_score, question, file_tag = ""):
     student_score = sns.countplot(gradebook_column, palette=clrs)
     plt.ylabel("# of Students")
     plt.xlabel("Score out of 5")
+    plt.xlim([-1,5])
     student_score.yaxis.set_major_locator(MaxNLocator(integer = True))
     student_score.legend(handles=[red_patch])
 
@@ -131,7 +158,12 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
 
     student_name = exam_id
     grader = student_exam['Grader']
+
+    ########################################################
+    #### this should be where we read off the exam name ####
+    ########################################################
     exam = exam_tag
+
     file_name = student_name+"_"+exam+".pdf"
 
     intro = "\t\t\t\tThis is your exam report for the {}. Your grader was {}, so please feel free to reach out to them if you have additional questions about the exam, or any of the grades you received."
@@ -149,44 +181,98 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
 
     pdf.set_font("Arial", size=10)
     pdf.ln(30)
-    pdf.cell(200, 6, txt="Hello {},".format(student_name), ln=1, align="L")
+    pdf.cell(190, 6, txt="Hello {},".format(student_name), ln=1, align="L")
     pdf.ln(2)
     pdf.multi_cell(190, 6, txt=intro.format(exam, grader), align = "L")
 
     pdf.ln(5)
     pdf.set_font("Arial", size = 12)
-    pdf.cell(190, 8, txt="Overall: {} out of 25".format(student_exam['Total Score']), ln = 1, align="C")
-    pdf.set_font("Arial", size = 10)
-    pdf.ln(2)
-    #pdf.cell(200, 8, txt="Which places you at the {} percentile.".format(percentile_list['total'][student_exam['Total Score'].iloc[0]]), align = "C")
-    pdf.ln(10)
+    pdf.cell(95, 8, txt="Overall: {} out of 25".format(student_exam['Total Score']), ln = 0, align="L")
 
-    pdf.line(10, 80, 200, 80)
+    temp_y = pdf.get_y()
+    pdf.set_font("Arial", size = 10)
+
+    produce_distplot(df['Total Score'].astype(int), int(student_exam['Total Score']), file_tag = "Overall_Graph")
+
+    pdf.image("./demo/example_exam/reports/images/Overall_Graphtemp_report.png",
+              x = 110,
+              w = 90)
+    final_y = pdf.get_y()
+
+    pdf.set_y(temp_y)
+    pdf.ln(4)
+    pdf.cell(90, 8, txt="Which places you at the {} percentile.".format(percentile_list['total'][student_exam['Total Score']]), align = "L")
+    pdf.ln(8)
+    pdf.multi_cell(90, 5, txt="Overall Comment: {}".format(student_exam['Overall Comment']), align = 'L', border = 0)
+
+    pdf.set_y(final_y)
+
+    pdf.line(10, final_y, 200, final_y)
 
     i = 1
 
     for question in questions.items():
 
+        if pdf.get_y() > 200:
+            pdf.add_page()
+            pdf.ln(1)
+            pdf.line(10, pdf.get_y(), 200, pdf.get_y())
         pdf.ln(1)
         pdf.set_font("Arial", size = 12)
-        pdf.cell(190, 8, txt=question[0]+": "+question[1], align = "C")
 
-        pdf.set_font("Arial", size = 10)
-        pdf.ln(6)
-        pdf.cell(190, 8, txt="Score: {}/5".format(student_exam[i]), align = "C")
-        pdf.ln(10)
+        if i % 4 == 1:
 
-        produce_hist(df[question[0]], student_exam[i], question[0], file_tag = question[0])
+            pdf.cell(100, 8, txt=question[0]+": "+question[1], align = "L")
 
-        pdf.image("./demo/example_exam/reports/images/" + question[0] + "temp_report.png", x = 53, w = 100)
+            temp = pdf.get_y()
 
+            pdf.set_font("Arial", size = 10)
+            pdf.set_x(110)
+            pdf.ln(2)
+            pdf.set_x(110)
+            pdf.multi_cell(90, 5, txt="TA Comment: {}".format(student_exam[i+1]), align = "L", border = 0)
+            if int(student_exam[i]) < 3:
+                pdf.ln(6)
+                pdf.set_x(110)
+                pdf.multi_cell(190, 6, txt="Instructor Comment: {}".format(temp_comment))
+            else:
+                pdf.ln(6)
 
-        if int(student_exam[i]) < 3:
+            pdf.set_y(temp)
+            pdf.ln(4)
+            pdf.cell(90, 8, txt="Score: {}/5".format(student_exam[i]), align = "L")
             pdf.ln(6)
-            pdf.multi_cell(190, 6, txt="Instructor Comment: {}".format(temp_comment))
+
+            produce_hist(df[question[0]], student_exam[i], question[0], file_tag = question[0])
+
+            pdf.image("./demo/example_exam/reports/images/" + question[0] + "temp_report.png", x = 5, w = 90)
         else:
+            pdf.set_x(110)
+            pdf.cell(90, 8, txt=question[0]+": "+question[1], align = "R")
+
+            temp = pdf.get_y()
+
+            pdf.set_font("Arial", size = 10)
+            pdf.set_x(10)
+            pdf.ln(2)
+            pdf.multi_cell(90, 5, txt="TA Comment: {}".format(student_exam[i+1]), align = "L", border = 0)
+            if int(student_exam[i]) < 3:
+                pdf.ln(6)
+                pdf.multi_cell(190, 6, txt="Instructor Comment: {}".format(temp_comment))
+            else:
+                pdf.ln(6)
+
+            pdf.set_y(temp)
+            pdf.ln(4)
+            pdf.set_x(110)
+            pdf.cell(90, 8, txt="Score: {}/5".format(student_exam[i]), align = "R")
             pdf.ln(6)
-        pdf.multi_cell(190, 6, txt="TA Comment: {}".format(student_exam[i+1]))
+
+            produce_hist(df[question[0]], student_exam[i], question[0], file_tag = question[0])
+
+            pdf.set_x(110)
+            pdf.image("./demo/example_exam/reports/images/" + question[0] + "temp_report.png", x = 120, w = 90)
+
         pdf.ln(2)
         y_space = pdf.get_y()
         i += 2
