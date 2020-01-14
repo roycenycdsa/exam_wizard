@@ -136,3 +136,7 @@ token.pickle
 *.DS_Store
 *.idea
 *.Rhistory
+
+# Project Specific
+*/ta_exam_workload.csv
+*/student_submissions/
