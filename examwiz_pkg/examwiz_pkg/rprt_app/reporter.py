@@ -158,7 +158,12 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
 
     student_name = exam_id
     grader = student_exam['Grader']
+
+    ########################################################
+    #### this should be where we read off the exam name ####
+    ########################################################
     exam = exam_tag
+
     file_name = student_name+"_"+exam+".pdf"
 
     intro = "\t\t\t\tThis is your exam report for the {}. Your grader was {}, so please feel free to reach out to them if you have additional questions about the exam, or any of the grades you received."
