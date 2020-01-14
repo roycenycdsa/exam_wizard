@@ -1,0 +1,12 @@
+[
+    {
+        "name": "Python Midterm",
+        "gradebook": "",
+        "formlink": ""
+    },
+    {
+        "name": "Example Exam",
+        "gradebook": "1EslwwOrJuor0NyolZTmkQHe6Dc7oN2Ta3TZatuq_Qnc",
+        "formlink": "https://docs.google.com/forms/d/e/1FAIpQLSdeOgHuin1UD9vCmjezzF0C7rF5h7nUz9RPqLMblcEBlv8i6g/viewform"
+    }
+]

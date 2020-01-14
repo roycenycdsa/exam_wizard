@@ -1,7 +1,7 @@
 from ..gapi_utils import st_service, dv_service, ap_service, ml_service
 from apiclient import errors
 import pandas as pd
-import os, shutil, ast
+import os, ast, json
 
 def create_grade_book(name, in_domain=True):
     # Creates a new google spreadsheet to hold exam grades
@@ -20,7 +20,13 @@ def create_grade_book(name, in_domain=True):
 
     return file_id
 
-def read_grade_book(file_id):
+def read_grade_book(name):
+    data = json.load(open('structure_files/exam_details.txt', 'r'))
+    try:
+        file_id = list(filter(lambda l: l['name'] == name, data))[0]['gradebook']
+    except IndexError:
+        return 'Exam Name not Found. Retry or create Add New Exam'
+
     result = st_service.spreadsheets().values().get(
         spreadsheetId=file_id, range='Form Responses 1').execute()
     return pd.DataFrame(columns=result['values'][0], data=result['values'][1:])
@@ -53,14 +59,12 @@ def update_permissions(file_id, in_domain=True):
     except errors as e:
         print('Error Occured:', e)
 
-def get_link(file_id, link_type='view'):
-    if link_type == 'download':
-        try:
-            return get_metadata(file_id)['webContentLink']
-        except KeyError:
-            return get_link(file_id, link_type='view')
-    else:
-        return get_metadata(file_id)['webViewLink']
+def get_link(name):
+    data = json.load(open('structure_files/exam_details.txt', 'r'))
+    try:
+        return list(filter(lambda l: l['name'] == name, data))[0]['formlink']
+    except IndexError:
+        return 'Exam Name not Found. Retry or create Add New Exam'
 
 def needs_grading(file_id, key_path):
     df = read_grade_book(file_id)
@@ -71,12 +75,15 @@ def needs_grading(file_id, key_path):
 
     return [int(i) for i in ids - done]
 
-def assigned_to(test_id, exam_id, wkld_path):
-    # Given a test id and a gradebook, find the ta who is supposed to grade it.
-    wkld = pd.read_csv(wkld_path)
+def assigned_to(test_id, path):
+    # Given a submission id and ta_workload path
+    wkld = pd.read_csv(path)
     wkld['workload'] = wkld.apply(lambda l: [os.path.splitext(i)[0] for i in ast.literal_eval(l.workload)], axis=1)
-    return wkld[list(map(lambda l: str(test_id) in l, wkld['workload'].values))][['ta', 'email']]
+    return list(wkld[list(map(lambda l: str(test_id) in l, wkld['workload'].values))][['ta', 'email']].values[0])
 
 def get_file_path(test_id, key_path):
     df = pd.read_csv(key_path)
     return df.loc[df['temp_id'] == int(test_id)]['new'].iloc[0]
+
+
+
