@@ -100,11 +100,13 @@ def percentile(lst):
 
     return percentile_scores
 
-def process_gradebook(df, questions, exam_tag):
+def process_gradebook(df, student_keys, questions, exam_tag):
     '''
     Process an entire gradebook into PDFs.
     Takes:
     df: A gradebook downloaded into a dataframe.
+    student_keys: A dataframe containing the conversion keys from exam ID to
+                  student names.
     questions: A dictonary of questions pertaining to that specific exam.
     exam_tag: what the reports will be tagged with, will eventually become the
               flag to choose which 'questions' set up should be used.
@@ -113,13 +115,18 @@ def process_gradebook(df, questions, exam_tag):
     Nothing, but produces as many PDFs as lines in the gradebook. They are saved
     to './reports/'.
     '''
-    exam_ids = df['Student ID'].unique()
+    df['Student ID'] = df['Student ID'].astype(int)
+    student_keys = student_keys[['name', 'student_id']]
+
+    combined_df = pd.merge(df, student_keys, how = 'left', left_on = 'Student ID', right_on = 'student_id')
+
+    exam_ids = combined_df['Student ID'].unique()
 
     percentile_list = {}
     for question in questions.items():
         percentile_list[question[0]] = percentile(df[question[0]])
 
-    percentile_list['total'] = percentile(df['Total Score'])
+    percentile_list['total'] = percentile(combined_df['Total Score'])
 
     num_of_ids = len(exam_ids)
     i = 1
@@ -127,7 +134,7 @@ def process_gradebook(df, questions, exam_tag):
     for exam_id in exam_ids:
         print("Processing exam: ", exam_id)
         print(i, " of ", num_of_ids)
-        process_single_report(exam_id, df, questions, exam_tag, percentile_list)
+        process_single_report(exam_id, combined_df, questions, exam_tag, percentile_list)
         i += 1
     pass
 
@@ -156,15 +163,11 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
 
     student_exam = student_exam.iloc[-1]
 
-    student_name = exam_id
+    student_name = student_exam['name']
+    print(student_exam['name'])
     grader = student_exam['Grader']
-
-    ########################################################
-    #### this should be where we read off the exam name ####
-    ########################################################
     exam = exam_tag
-
-    file_name = student_name+"_"+exam+".pdf"
+    file_name = student_exam['name'].strip()+"_"+exam+".pdf"
 
     intro = "\t\t\t\tThis is your exam report for the {}. Your grader was {}, so please feel free to reach out to them if you have additional questions about the exam, or any of the grades you received."
 
@@ -173,7 +176,7 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
 
     pdf = FPDF()
     pdf.add_page()
-    pdf.image("./structure_files/nycdsalogo.png", x=55, y=8, w=100)
+    pdf.image("../structure_files/nycdsalogo.png", x=55, y=8, w=100)
 
     pdf.set_line_width(0.5)
     pdf.set_fill_color(255, 0, 0)
@@ -181,7 +184,7 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
 
     pdf.set_font("Arial", size=10)
     pdf.ln(30)
-    pdf.cell(190, 6, txt="Hello {},".format(student_name), ln=1, align="L")
+    pdf.cell(190, 6, txt="Hello {},".format(student_exam['name'].strip()), ln=1, align="L")
     pdf.ln(2)
     pdf.multi_cell(190, 6, txt=intro.format(exam, grader), align = "L")
 
@@ -192,7 +195,7 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
     temp_y = pdf.get_y()
     pdf.set_font("Arial", size = 10)
 
-    produce_distplot(df['Total Score'].astype(int), int(student_exam['Total Score']), file_tag = "Overall_Graph")
+    produce_distplot(gradebook['Total Score'].astype(int), int(student_exam['Total Score']), file_tag = "Overall_Graph")
 
     pdf.image("./demo/example_exam/reports/images/Overall_Graphtemp_report.png",
               x = 110,
