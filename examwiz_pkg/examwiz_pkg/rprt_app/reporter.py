@@ -14,8 +14,6 @@ def produce_distplot(gradebook_column, student_score, file_tag = ""):
 
     sns.set_style('whitegrid')
 
-    print(gradebook_column, "gradebook column")
-    print(student_score)
     n, bins, patches = plt.hist(gradebook_column.astype(int),
                                 bins = np.arange(0, 26, 1), density = True, color = 'grey')
     dist_curve = sns.distplot(gradebook_column.astype(int), hist=False)
@@ -176,7 +174,7 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
 
     pdf = FPDF()
     pdf.add_page()
-    pdf.image("../structure_files/nycdsalogo.png", x=55, y=8, w=100)
+    pdf.image("./structure_files/nycdsalogo.png", x=55, y=8, w=100)
 
     pdf.set_line_width(0.5)
     pdf.set_fill_color(255, 0, 0)
@@ -195,7 +193,7 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
     temp_y = pdf.get_y()
     pdf.set_font("Arial", size = 10)
 
-    produce_distplot(gradebook['Total Score'].astype(int), int(student_exam['Total Score']), file_tag = "Overall_Graph")
+    produce_distplot(df['Total Score'].astype(int), int(student_exam['Total Score']), file_tag = "Overall_Graph")
 
     pdf.image("./demo/example_exam/reports/images/Overall_Graphtemp_report.png",
               x = 110,
