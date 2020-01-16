@@ -20,6 +20,11 @@ def create_grade_book(name, in_domain=True):
 
     return file_id
 
+def read_by_id(file_id):
+    result = st_service.spreadsheets().values().get(
+        spreadsheetId=file_id, range='Form Responses 1').execute()
+    return pd.DataFrame(columns=result['values'][0], data=result['values'][1:])
+
 def read_grade_book(name):
     data = json.load(open('structure_files/exam_details.txt', 'r'))
     try:

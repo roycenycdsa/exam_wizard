@@ -8,9 +8,6 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.ticker import MaxNLocator
 
-
-
-
 def produce_distplot(gradebook_column, student_score, file_tag = ""):
 
     plt.gcf().clf()
@@ -145,7 +142,7 @@ def process_gradebook(df, student_keys, key_questions, exam_tag):
         print(i, " of ", num_of_ids)
         process_single_report(exam_id, combined_df, key_questions, exam_tag, percentile_list)
         i += 1
-    
+
     pass
 
 def process_single_report(exam_id, df, questions, exam_tag, percentile_list):

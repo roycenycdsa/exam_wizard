@@ -138,5 +138,6 @@ token.pickle
 *.Rhistory
 
 # Project Specific
-*/ta_exam_workload.csv
+*ta_exam_workload.csv
 */student_submissions/
+*/student_submissions/*.R
