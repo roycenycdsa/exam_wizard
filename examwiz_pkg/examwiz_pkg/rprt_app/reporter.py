@@ -126,7 +126,7 @@ def process_gradebook(df, student_keys, key_questions, exam_tag):
     questions = [x for x in df.columns if ('question' in x.lower()) and not ('comment' in x.lower())]
     comments = [x for x in df.columns if ('question' in x.lower()) and ('comment' in x.lower())]
 
-    df['Total Score'] = df[questions].astype(int).apply(sum, axis=1)
+    combined_df['Total Score'] = combined_df[questions].astype(int).apply(sum, axis=1)
 
     exam_ids = combined_df['Student ID'].unique()
 
