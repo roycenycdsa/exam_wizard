@@ -17,6 +17,7 @@ if __name__ == '__main__':
     df = pd.read_csv(student_contact)
     for i in range(df.shape[0]):
         std = df.iloc[i]
+        print(std['name']+'_.pdf')
         try:
             em = ml.create_attached_message(
                 sender='charles.cohen@nycdatascience.com',
@@ -24,7 +25,7 @@ if __name__ == '__main__':
                 subject=f'{exam_name} Grade Report',
                 msg=f'Hello {std["name"]}\nAttached is your Grade Report for {exam_name}\nPlease contact your grading TA with any questions.',
                 file_dir=report_path,
-                filenames=[str(std.student_id)+'.pdf'])
+                filenames=[std['name']+'_.pdf'])
             #ml.send_message(em)
             print('Report sent to:', std['name'])
         except FileNotFoundError:
