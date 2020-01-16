@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.ticker import MaxNLocator
 import warnings
+import shutil
 warnings.filterwarnings("ignore")
 
 def produce_distplot(gradebook_column, student_score, file_tag = ""):
@@ -145,6 +146,7 @@ def process_gradebook(df, student_keys, key_questions, exam_tag):
         process_single_report(exam_id, combined_df, key_questions, exam_tag, percentile_list)
         i += 1
 
+    shutil.rmtree("./demo/example_exam/student_submissions/reports/images/")
     pass
 
 def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
