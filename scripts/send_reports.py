@@ -19,7 +19,8 @@ for i in range(df.shape[0]):
     std = df.iloc[i]
     a = str(std['student_id'])+'.pdf'
     b = std['name'].replace("'", "").lstrip()+'.pdf'
-    #os.rename(report_path + a, report_path + b)
+    #print(a, b)
+    os.rename(report_path + a, report_path + b)
     try:
         em = ml.create_attached_message(
             sender='charles.cohen@nycdatascience.com',
@@ -27,9 +28,9 @@ for i in range(df.shape[0]):
             subject=f'{exam_name} Grade Report',
             msg=f'Hello {std["name"]}\nAttached is your Grade Report for {exam_name}\nPlease contact your grading TA with any questions.',
             file_dir=report_path,
-            filenames=[a])
+            filenames=[b])
         ml.send_message(em)
-        #os.rename(report_path + b, report_path + a)
+        os.rename(report_path + b, report_path + a)
         print('Report sent to:', std['name'])
     except FileNotFoundError:
         print('Report not found for:', std["name"])

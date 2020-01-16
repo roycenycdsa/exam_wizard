@@ -10,7 +10,7 @@ def distribute(submissions_path, ta_details_path, form_link):
 
     # Divy up workload and send TAs exams to grade
     workload = []
-    submissions = list(filter(lambda l: l != 'student_details.csv', an.list_files(submissions_path)))
+    submissions = list(filter(lambda l: l not in ['student_details.csv', 'reports', '.DS_Store'], an.list_files(submissions_path)))
     num_submits = len(submissions)
 
     for i in range(len(tas)):
@@ -26,8 +26,8 @@ def distribute(submissions_path, ta_details_path, form_link):
         )
         ml.send_message(em)
 
-    print(pd.DataFrame(workload))
-    pd.DataFrame(workload).to_csv(submissions_path + "/../ta_exam_workload.csv")
+
+    pd.DataFrame(workload).to_csv(submissions_path + "/ta_exam_workload.csv")
 
 if __name__ == '__main__':
     ask = False
