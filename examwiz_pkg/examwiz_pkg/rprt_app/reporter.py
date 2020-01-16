@@ -7,6 +7,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.ticker import MaxNLocator
+import warnings
+warnings.filterwarnings("ignore")
 
 def produce_distplot(gradebook_column, student_score, file_tag = ""):
 
@@ -40,9 +42,9 @@ def produce_hist(gradebook_column, student_score, question, file_tag = ""):
     # clear working space
     plt.gcf().clf()
 
-    scores = gradebook_column.unique().astype(str)
+    scores = gradebook_column.unique().astype(int)
     scores.sort()
-    student_score = str(student_score)
+    student_score = int(student_score)
     # print(question)
     # print("using ", scores, " as scores")
     # print("using ", student_score, " as student score")

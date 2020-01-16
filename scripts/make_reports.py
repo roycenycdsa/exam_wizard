@@ -9,8 +9,6 @@ exam_id = 'Example Exam'
 
 gradebook = gb.read_grade_book(exam_id)
 
-#temp = input("Please enter the filename and path for the student information.\n")
-
 student_key = pd.read_csv("./demo/example_exam/student_submissions/student_details.csv")
 
 sample_exam = {"Question 1" : "Binary Search Question",
@@ -19,6 +17,5 @@ sample_exam = {"Question 1" : "Binary Search Question",
                "Question 4" : "Calculate Machine Learning Coefficients",
                "Question 5" : "Python Data Analysis"}
 
-#exam_name = input("Please enter the exam name.\n")
 exam_name = 'Example Exam'
 rp.process_gradebook(gradebook, student_key, sample_exam, exam_name)
