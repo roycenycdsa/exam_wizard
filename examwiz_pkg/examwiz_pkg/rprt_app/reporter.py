@@ -8,6 +8,9 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.ticker import MaxNLocator
 
+
+
+
 def produce_distplot(gradebook_column, student_score, file_tag = ""):
 
     plt.gcf().clf()
@@ -25,11 +28,11 @@ def produce_distplot(gradebook_column, student_score, file_tag = ""):
     red_patch = mpatches.Patch(color = 'red', label = 'Your Score')
     dist_curve.legend(handles=[red_patch])
 
-    if not os.path.isdir("./demo/example_exam/reports/images/"):
-        os.makedirs("./demo/example_exam/reports/images/")
+    if not os.path.isdir("./demo/example_exam/student_submissions/reports/images/"):
+        os.makedirs("./demo/example_exam/student_submissions/reports/images/")
 
     temp = dist_curve.get_figure()
-    temp.savefig("./demo/example_exam/reports/images/" + file_tag + "temp_report.png")
+    temp.savefig("./demo/example_exam/student_submissions/reports/images/" + file_tag + "temp_report.png")
 
 def produce_hist(gradebook_column, student_score, question, file_tag = ""):
     '''
@@ -58,11 +61,11 @@ def produce_hist(gradebook_column, student_score, question, file_tag = ""):
     student_score.yaxis.set_major_locator(MaxNLocator(integer = True))
     student_score.legend(handles=[red_patch])
 
-    if not os.path.isdir("./demo/example_exam/reports/images/"):
-        os.makedirs("./demo/example_exam/reports/images/")
+    if not os.path.isdir("./demo/example_exam/student_submissions/reports/images/"):
+        os.makedirs("./demo/example_exam/student_submissions/reports/images/")
 
     temp = student_score.get_figure()
-    temp.savefig("./demo/example_exam/reports/images/" + file_tag + "temp_report.png")
+    temp.savefig("./demo/example_exam/student_submissions/reports/images/" + file_tag + "temp_report.png")
 
     return student_score
 
@@ -98,7 +101,7 @@ def percentile(lst):
 
     return percentile_scores
 
-def process_gradebook(df, student_keys, questions, exam_tag):
+def process_gradebook(df, student_keys, key_questions, exam_tag):
     '''
     Process an entire gradebook into PDFs.
     Takes:
@@ -116,13 +119,21 @@ def process_gradebook(df, student_keys, questions, exam_tag):
     df['Student ID'] = df['Student ID'].astype(int)
     student_keys = student_keys[['name', 'student_id']]
 
+    student_keys.loc[::,'name'] = student_keys['name'].str.replace("['\"]", "")
+    student_keys.loc[::,'name'] = student_keys['name'].str.replace("^\s", "")
+
     combined_df = pd.merge(df, student_keys, how = 'left', left_on = 'Student ID', right_on = 'student_id')
+
+    questions = [x for x in df.columns if ('question' in x.lower()) and not ('comment' in x.lower())]
+    comments = [x for x in df.columns if ('question' in x.lower()) and ('comment' in x.lower())]
+
+    df['Total Score'] = df[questions].astype(int).apply(sum, axis=1)
 
     exam_ids = combined_df['Student ID'].unique()
 
     percentile_list = {}
-    for question in questions.items():
-        percentile_list[question[0]] = percentile(df[question[0]])
+    for question in questions:
+        percentile_list[question] = percentile(df[question])
 
     percentile_list['total'] = percentile(combined_df['Total Score'])
 
@@ -132,8 +143,9 @@ def process_gradebook(df, student_keys, questions, exam_tag):
     for exam_id in exam_ids:
         print("Processing exam: ", exam_id)
         print(i, " of ", num_of_ids)
-        process_single_report(exam_id, combined_df, questions, exam_tag, percentile_list)
+        process_single_report(exam_id, combined_df, key_questions, exam_tag, percentile_list)
         i += 1
+    
     pass
 
 def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
@@ -161,7 +173,6 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
 
     student_exam = student_exam.iloc[-1]
 
-    student_name = student_exam['name']
     print(student_exam['name'])
     grader = student_exam['Grader']
     exam = exam_tag
@@ -195,7 +206,7 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
 
     produce_distplot(df['Total Score'].astype(int), int(student_exam['Total Score']), file_tag = "Overall_Graph")
 
-    pdf.image("./demo/example_exam/reports/images/Overall_Graphtemp_report.png",
+    pdf.image("./demo/example_exam/student_submissions/reports/images/Overall_Graphtemp_report.png",
               x = 110,
               w = 90)
     final_y = pdf.get_y()
@@ -246,7 +257,7 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
 
             produce_hist(df[question[0]], student_exam[i], question[0], file_tag = question[0])
 
-            pdf.image("./demo/example_exam/reports/images/" + question[0] + "temp_report.png", x = 5, w = 90)
+            pdf.image("./demo/example_exam/student_submissions/reports/images/" + question[0] + "temp_report.png", x = 5, w = 90)
         else:
             pdf.set_x(110)
             pdf.cell(90, 8, txt=question[0]+": "+question[1], align = "R")
@@ -272,7 +283,7 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
             produce_hist(df[question[0]], student_exam[i], question[0], file_tag = question[0])
 
             pdf.set_x(110)
-            pdf.image("./demo/example_exam/reports/images/" + question[0] + "temp_report.png", x = 120, w = 90)
+            pdf.image("./demo/example_exam/student_submissions/reports/images/" + question[0] + "temp_report.png", x = 120, w = 90)
 
         pdf.ln(2)
         y_space = pdf.get_y()
@@ -281,5 +292,5 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
 
 
 
-    pdf.output("./demo/example_exam/reports/" + file_name)
+    pdf.output("./demo/example_exam/student_submissions/reports/" + str(student_exam['student_id']) + '.pdf')
     pass
