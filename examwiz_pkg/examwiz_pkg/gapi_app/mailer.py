@@ -5,6 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 import mimetypes
+import email.encoders
 
 def create_message(sender, to, subject, msg):
     message = MIMEText(msg)
@@ -47,8 +48,10 @@ def create_attached_message(sender, to, subject, msg, file_dir, filenames=[]):
             msg = MIMEBase(main_type, sub_type)
             msg.set_payload(fp.read())
             fp.close()
+            message.attach(msg)
 
         msg.add_header('Content-Disposition', 'attachment', filename=file)
+        email.encoders.encode_base64(msg)
         message.attach(msg)
     return {'raw': base64.urlsafe_b64encode(message.as_string().encode()).decode()}
 
