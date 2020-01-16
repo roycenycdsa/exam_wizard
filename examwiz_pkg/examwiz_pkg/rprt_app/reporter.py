@@ -173,9 +173,12 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
     student_exam = student_exam.iloc[-1]
 
     print(student_exam['name'])
+    #print(student_exam)
+    #print(percentile_list)
     grader = student_exam['Grader']
     exam = exam_tag
     file_name = student_exam['name'].strip()+"_"+exam+".pdf"
+    #total_score = student_exam['Total Score']
 
     intro = "\t\t\t\tThis is your exam report for the {}. Your grader was {}, so please feel free to reach out to them if you have additional questions about the exam, or any of the grades you received."
 
@@ -212,7 +215,7 @@ def process_single_report(exam_id, df, questions, exam_tag, percentile_list):
 
     pdf.set_y(temp_y)
     pdf.ln(4)
-    pdf.cell(90, 8, txt="Which places you at the {} percentile.".format(percentile_list['total'][student_exam['Total Score']]), align = "L")
+    pdf.cell(90, 8, txt="Which places you at the {} percentile.".format(percentile_list['total'][str(student_exam['Total Score'])]), align = "L")
     pdf.ln(8)
     pdf.multi_cell(90, 5, txt="Overall Comment: {}".format(student_exam['Overall Comment']), align = 'L', border = 0)
 
