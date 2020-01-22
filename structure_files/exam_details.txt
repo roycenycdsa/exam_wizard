@@ -1,12 +1,18 @@
 [
     {
         "name": "Python Midterm",
-        "gradebook": "",
-        "formlink": ""
+        "gradebook": "1LxSk2Kpbio9J7x9mxI5V3T0Cjx9POrTwLyLDWUNLXm8",
+        "formlink": "https://docs.google.com/forms/d/e/1FAIpQLSc-bf4hO3Ot6BlwHAYXbmCupx3_4CepUueuPl-yojkbs6i9ag/viewform"
     },
     {
         "name": "Example Exam",
         "gradebook": "1EslwwOrJuor0NyolZTmkQHe6Dc7oN2Ta3TZatuq_Qnc",
         "formlink": "https://docs.google.com/forms/d/e/1FAIpQLSdeOgHuin1UD9vCmjezzF0C7rF5h7nUz9RPqLMblcEBlv8i6g/viewform"
+    },
+    {
+        "name": "R Midterm",
+        "gradebook": "1u0Oy0LTGmMQxvjnL1s_pc1jho-eSp-kOgsmHR1cae00",
+        "formlink": "https://docs.google.com/forms/d/e/1FAIpQLSfUfw6jEXxQhUNwzbSkjhXf_ZFlYWBAUwYQVi8DYy2qnSkcLQ/viewform
+
     }
 ]
