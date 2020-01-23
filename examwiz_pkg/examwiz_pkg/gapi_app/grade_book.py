@@ -26,7 +26,7 @@ def read_by_id(file_id):
     return pd.DataFrame(columns=result['values'][0], data=result['values'][1:])
 
 def read_grade_book(name):
-    data = json.load(open('structure_files/exam_details.txt', 'r'))
+    data = json.load(open('structure_files/exam_details.json', 'r'))
     try:
         file_id = list(filter(lambda l: l['name'] == name, data))[0]['gradebook']
     except IndexError:
@@ -65,7 +65,7 @@ def update_permissions(file_id, in_domain=True):
         print('Error Occured:', e)
 
 def get_link(name):
-    data = json.load(open('structure_files/exam_details.txt', 'r'))
+    data = json.load(open('structure_files/exam_details.json', 'r'))
     try:
         return list(filter(lambda l: l['name'] == name, data))[0]['formlink']
     except IndexError:

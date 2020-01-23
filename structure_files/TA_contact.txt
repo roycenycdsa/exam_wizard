@@ -1,26 +1,41 @@
 [
     {
-        "name": "Sam",
-        "email": "nycdsa.student@gmail.com",
+        "name": "Sam Audino",
+        "email": "sam.audino@nycdatascience.com",
         "active": "True"
     },
     {
-        "name": "Charlie",
-        "email": "nycdsa.student@gmail.com",
+        "name": "Charlie Cohen",
+        "email": "charles.cohen@nycdatascience.com",
         "active": "True"
     },
     {
-        "name": "Wenjun",
-        "email": "nycdsa.student@gmail.com",
+        "name": "Wenjun Ma",
+        "email": "wenjun.ma@nycdatascience.com",
         "active": "True"
     },
     {
-        "name": "Simon",
-        "email": "nycdsa.student@gmail.com",
+        "name": "Simon Zhong",
+        "email": "xiangwei.zhong@nycdatascience.com",
+        "active": "False"
+    },
+    {
+        "name": "Sammy Dolgin",
+        "email": "samuel.dolgin@nycdatascience.com",
         "active": "True"
     },
     {
-        "name": "Sammy",
+        "name": "TA_1",
+        "email": "nycdsa.student@gmail.com",
+    	"active": "False"
+    },
+    {
+        "name": "TA_2",
+        "email": "nycdsa.student@gmail.com",
+        "active": "False"
+        },
+    {
+        "name": "TA_3",
         "email": "nycdsa.student@gmail.com",
         "active": "False"
     }

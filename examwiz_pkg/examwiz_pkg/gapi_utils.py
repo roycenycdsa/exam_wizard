@@ -1,15 +1,20 @@
 from __future__ import print_function
 import pickle
 import os.path
+import configparser
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
-import yaml
 
-mod_path = "/".join(__file__.split("/")[:-2])
-with open('{}/config.yaml'.format(mod_path)) as f:
-    cred_path = yaml.load(f, Loader=yaml.FullLoader)
-    cred_path = cred_path["cred_path"]
+config = configparser.ConfigParser()
+config.read('structure_files/config.ini')
+cred_path = config['googAPI']['cred_path']
+
+
+# mod_path = "/".join(__file__.split("/")[:-2])
+# with open('{}/config.ini'.format(mod_path)) as f:
+#     cred_path = yaml.load(f, Loader=yaml.FullLoader)
+#     cred_path = cred_path["cred_path"]
 
 # Requested permissions from google user
 SCOPES = ['https://mail.google.com/',

@@ -2,15 +2,25 @@ import pandas as pd
 import sys, os, glob
 sys.path.append('.')
 from examwiz_pkg.examwiz_pkg.gapi_app import mailer as ml
+from examwiz_pkg.examwiz_pkg.gapi_app import grade_book as gb
 from examwiz_pkg.examwiz_pkg.anon_app import anonymizer as an
+import configparser
 
-def distribute(submissions_path, ta_details_path, form_link):
+
+def distribute(submissions_path, ta_details_path, form_link, name):
     encryption_key = submissions_path + '/student_details.csv'
+    json_map = submissions_path + '/jsonMap.json'
     tas = ml.get_ta_emails(ta_details_path)
 
     # Divy up workload and send TAs exams to grade
     workload = []
-    submissions = list(filter(lambda l: l not in ['student_details.csv', 'reports', '.DS_Store'], an.list_files(submissions_path)))
+    not_exams = ['student_details.csv', 'reports', '.DS_Store', 'ta_exam_workload.csv', 'jsonMap.json']
+    submissions = list(filter(lambda l: l not in not_exams,
+                              an.list_files(submissions_path)))
+    df = pd.read_json(json_map).T.reset_index()
+    submissions = list(filter(lambda l: os.path.splitext(l)[0] in df[df.role=='user']['index'].values, os.listdir(submissions_path)))
+
+
     num_submits = len(submissions)
 
     for i in range(len(tas)):
@@ -19,25 +29,20 @@ def distribute(submissions_path, ta_details_path, form_link):
         em = ml.create_attached_message(
             sender='charles.cohen@nycdatascience.com',
             to=tas[i][1],
-            subject='Exams to grade: R Midterm',
-            msg=ml.grade_these(tas[i][0], form_link),
+            subject='Exams to grade: ' + name,
+            msg=ml.grade_these(tas[i][0], form_link, name),
             file_dir=submissions_path,
             filenames=exams
         )
+        #print(tas[i][0], exams)
         ml.send_message(em)
-
-
     pd.DataFrame(workload).to_csv(submissions_path + "/ta_exam_workload.csv")
 
 if __name__ == '__main__':
-    ask = False
-    if ask:
-        sub_path = input("Path to student submissions: ")
-        ta_path = input("Path to TA contact details: ")
-        form_link = input("Link to grading form: ")
-    else:
-        sub_path = 'demo/example_exam/student_submissions'
-        ta_path = 'structure_files/TA_contact.txt'
-        form_link = 'https://docs.google.com/forms/d/e/1FAIpQLSdeOgHuin1UD9vCmjezzF0C7rF5h7nUz9RPqLMblcEBlv8i6g/viewform'
-
-    distribute(sub_path, ta_path, form_link)
+    config = configparser.ConfigParser()
+    config.read('structure_files/config.ini')
+    sub_path = config['exams']['path']
+    ta_path = 'structure_files/TA_contact.txt'
+    form_link = gb.get_link(config['exams']['name'])
+    name = config['exams']['name']
+    distribute(sub_path, ta_path, form_link, name)

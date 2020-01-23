@@ -1,6 +1,9 @@
 import pandas as pd
-import os
-submissions_dir = input()
+import configparser
+
+config = configparser.ConfigParser()
+config.read('structure_files/config.ini')
+submissions_dir = config['exams']['path']
 
 ## This script takes the directory of the submissions files
 ## Locates the jsonMap.json containing the submission encryption key

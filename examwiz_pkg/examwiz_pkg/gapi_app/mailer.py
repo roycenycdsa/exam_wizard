@@ -6,6 +6,7 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 import mimetypes
 import email.encoders
+import time
 
 def create_message(sender, to, subject, msg):
     message = MIMEText(msg)
@@ -56,11 +57,12 @@ def create_attached_message(sender, to, subject, msg, file_dir, filenames=[]):
     return {'raw': base64.urlsafe_b64encode(message.as_string().encode()).decode()}
 
 def send_message(message):
+    time.sleep(1)
     try:
         message = ml_service.users().messages().send(userId='me', body=message).execute()
         print('Message Sent!')
     except errors.HttpError as error:
-        print('An error occured: %s' % error)
+        print('An error occurred: %s' % error)
 
 def get_ta_emails(fp):
     names, emails = [], []
@@ -88,9 +90,9 @@ If you received this email in error, please contact the bootcamp coordinator."""
     )
     send_message(msg)
 
-def grade_these(name, link):
+def grade_these(name, link, exam):
     """Pre-Written Script 'grade these exams' for Mailer."""
     return f"Hi {name},\n" \
-           f"Here are the R Midterm student exams.\n" \
-           f"Please submit your grade to them promptly.\n" \
-           f"Here is the submission form link: {link}"
+           f"Attached are your exams to grade. Please grade them promptly.\n" \
+           f"Submit your grades using this form: {link}\n" \
+           f"Use the filename as the Student ID when submitting."
