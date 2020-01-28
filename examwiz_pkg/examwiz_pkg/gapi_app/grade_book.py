@@ -84,7 +84,13 @@ def assigned_to(test_id, path):
     # Given a submission id and ta_workload path
     wkld = pd.read_csv(path)
     wkld['workload'] = wkld.apply(lambda l: [os.path.splitext(i)[0] for i in ast.literal_eval(l.workload)], axis=1)
-    return list(wkld[list(map(lambda l: str(test_id) in l, wkld['workload'].values))][['ta', 'email']].values[0])
+    try:
+        a = list(wkld[list(map(lambda l: str(test_id) in l, wkld['workload'].values))][['ta', 'email']].values[0])
+        return a
+    except IndexError as e:
+        print(test_id + ' not found')
+        return []
+
 
 def get_file_path(test_id, key_path):
     df = pd.read_csv(key_path)
