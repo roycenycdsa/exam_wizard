@@ -34,5 +34,7 @@ remaining = assigned - graded
 ## Print out TAs with outstanding work remaining
 print("TAs with work remaining:")
 print(wkld[wkld['workload'].isin(remaining)].groupby('ta')['workload'].count())
+print(wkld[wkld['workload'].isin(remaining)].set_index('ta'))
+
 print("TAs who have finished:")
 print(wkld[~wkld['workload'].isin(remaining)]['ta'].unique())
