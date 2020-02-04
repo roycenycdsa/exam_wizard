@@ -38,7 +38,10 @@ def produce_distplot(path, gradebook_column, student_score, file_tag = "", out_o
 
     sorted_gb = gradebook_column.astype(int).sort_values().unique()
 
-    idx = np.where(sorted_gb == student_score)[0][0]
+    if admin:
+        pass
+    else:
+        idx = np.where(sorted_gb == student_score)[0][0]
 
     min_score = int(sorted_gb[0] - 5) if int(sorted_gb[0] - 5) >= 0 else 0
 
@@ -135,7 +138,7 @@ def percentile(lst):
     return percentile_scores
 
 def section_total(df, section_name, exam_structure):
-    df[section_name + " Total"] = df[exam_structure[section_name][0].keys()].sum(axis=1).astype('int64')
+    df[section_name + " Total"] = df[exam_structure[section_name][0].keys()].astype('int64').sum(axis=1)
     return df
 
 
@@ -468,14 +471,14 @@ def process_gradebook(gradebook, student_keys, exam_str, path="./", admin_only =
     print(to_sum)
     print(to_percentile)
     if admin_only:
-        gradebook['Total Score'] = gradebook[to_sum].sum(axis=1).astype('int64')
+        gradebook['Total Score'] = gradebook[to_sum].astype('int64').sum(axis=1)
 
         percentile_dict = {question:percentile(gradebook[question]) for question in to_percentile}
 
 #         num_ids = len(gradebook['Student ID'].unique())
 
     else:
-        gradebook_names['Total Score'] = gradebook_names[to_sum].sum(axis=1).astype('int64')
+        gradebook_names['Total Score'] = gradebook_names[to_sum].astype('int64').sum(axis=1)
 
         percentile_dict = {question:percentile(gradebook_names[question]) for question in to_percentile}
 
