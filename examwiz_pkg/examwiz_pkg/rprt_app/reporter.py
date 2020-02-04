@@ -93,7 +93,7 @@ def produce_hist(path, gradebook_column, student_score, question, file_tag = "",
     student_score = sns.countplot(gradebook_column, palette=clrs)
     plt.ylabel("# of Students")
     plt.xlabel("Score out of %s"%(out_of))
-    plt.xlim([-1,out_of+1])
+    plt.xlim([-1,len(scores)])
     student_score.yaxis.set_major_locator(MaxNLocator(integer = True))
     student_score.legend(handles=[red_patch])
 
