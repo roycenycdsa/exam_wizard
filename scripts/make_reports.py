@@ -10,15 +10,14 @@ config.read('structure_files/config.ini')
 exam_name = config['exams']['name']
 sub_path = config['exams']['path']
 
-gradebook = gb.read_grade_book(exam_name)
+#gradebook = gb.read_grade_book(exam_name)
+gradebook = pd.read_csv(sub_path + "r_midterm.csv")
 
-student_key = pd.read_csv(path + '/student_details.csv")
+student_key = pd.read_csv(sub_path + 'student_details.csv')
 
-sample_exam = {"Question 1" : "Binary Search Question",
-               "Question 2" : "Flatten a JSON",
-               "Question 3" : "OOP: Fahrenheit to Celcius and Back",
-               "Question 4" : "Calculate Machine Learning Coefficients",
-               "Question 5" : "Python Data Analysis"}
+exam_details = pd.read_json("./structure_files/exam_details.json")
 
+sample_exam = exam_details[exam_details['name'] == exam_name]['structure'].values
 
-rp.process_gradebook(gradebook, student_key, sample_exam, exam_name)
+rp.process_gradebook(gradebook = gradebook, student_keys = student_key,
+                     exam_str = sample_exam, path = sub_path)
