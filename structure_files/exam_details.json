@@ -2,17 +2,112 @@
     {
         "name": "Python Midterm",
         "gradebook": "1LxSk2Kpbio9J7x9mxI5V3T0Cjx9POrTwLyLDWUNLXm8",
-        "formlink": "https://docs.google.com/forms/d/e/1FAIpQLSc-bf4hO3Ot6BlwHAYXbmCupx3_4CepUueuPl-yojkbs6i9ag/viewform"
+        "formlink": "https://docs.google.com/forms/d/e/1FAIpQLSc-bf4hO3Ot6BlwHAYXbmCupx3_4CepUueuPl-yojkbs6i9ag/viewform",
+        "structure": {
+            "Python Exam": [
+                {
+                    "Question 1": [
+                        "Binary Search Question",
+                        5
+                    ],
+                    "Question 2": [
+                        "Flatten a JSON",
+                        5
+                    ],
+                    "Question 3": [
+                        "OOP: Fahrenheit to Celcius and Back",
+                        5
+                    ],
+                    "Question 4": [
+                        "Calculate Machine Learning Coefficients",
+                        5
+                    ],
+                    "Question 5": [
+                        "Python Data Analysis",
+                        5
+                    ]
+                }, 25]}
     },
     {
         "name": "Example Exam",
         "gradebook": "1EslwwOrJuor0NyolZTmkQHe6Dc7oN2Ta3TZatuq_Qnc",
-        "formlink": "https://docs.google.com/forms/d/e/1FAIpQLSdeOgHuin1UD9vCmjezzF0C7rF5h7nUz9RPqLMblcEBlv8i6g/viewform"
+        "formlink": "https://docs.google.com/forms/d/e/1FAIpQLSdeOgHuin1UD9vCmjezzF0C7rF5h7nUz9RPqLMblcEBlv8i6g/viewform",
+        "structure": {}
     },
     {
         "name": "R Midterm",
         "gradebook": "1u0Oy0LTGmMQxvjnL1s_pc1jho-eSp-kOgsmHR1cae00",
-        "formlink": "https://docs.google.com/forms/d/e/1FAIpQLSfUfw6jEXxQhUNwzbSkjhXf_ZFlYWBAUwYQVi8DYy2qnSkcLQ/viewform"
-
+        "formlink": "https://docs.google.com/forms/d/e/1FAIpQLSfUfw6jEXxQhUNwzbSkjhXf_ZFlYWBAUwYQVi8DYy2qnSkcLQ/viewform",
+        "structure": {
+            "R Exam": [
+                {
+                    "File I/O": [
+                        {
+                            "Problem 1": [
+                                "Listing your Files",
+                                5
+                            ],
+                            "Problem 2": [
+                                "Appending the Filepath",
+                                5
+                            ],
+                            "Problem 3": [
+                                "Loading in your Data",
+                                10
+                            ]
+                        },
+                        20
+                    ],
+                    "Wrangling": [
+                        {
+                            "Problem 4": [
+                                "Filtering your Data",
+                                10
+                            ],
+                            "Problem 5.a": [
+                                "Cleaning Dates Part 1",
+                                15
+                            ],
+                            "Problem 5.b": [
+                                "Cleaning Dates Part 2",
+                                15
+                            ],
+                            "Problem 6": [
+                                "Cleaning Amounts",
+                                15
+                            ],
+                            "Problem 7": [
+                                "Combining your Data",
+                                15
+                            ]
+                        },
+                        70
+                    ],
+                    "Exploration": [
+                        {
+                            "Problem 8": [
+                                "Calculating Total Payments",
+                                5
+                            ],
+                            "Problem 9": [
+                                "Calculating Coverage Period",
+                                10
+                            ],
+                            "Problem 10": [
+                                "Calculating Average Annual Expenditure",
+                                15
+                            ],
+                            "Problem 11": [
+                                "Cleaning Office and Purpose Columns",
+                                15
+                            ],
+                            "Problem 12": [
+                                "Finding Purpose for the Spending",
+                                25
+                            ]
+                        },
+                        70
+                    ]
+                }, 160]}
     }
 ]
