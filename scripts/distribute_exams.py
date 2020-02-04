@@ -1,5 +1,5 @@
 import pandas as pd
-import sys, os, glob
+import sys, os
 sys.path.append('.')
 from examwiz_pkg.examwiz_pkg.gapi_app import mailer as ml
 from examwiz_pkg.examwiz_pkg.gapi_app import grade_book as gb
@@ -35,7 +35,7 @@ def distribute(submissions_path, ta_details_path, form_link, name):
             filenames=exams
         )
         #print(tas[i][0], exams)
-        ml.send_message(em)
+        #ml.send_message(em)
     pd.DataFrame(workload).to_csv(submissions_path + "/ta_exam_workload.csv")
 
 if __name__ == '__main__':
@@ -45,4 +45,10 @@ if __name__ == '__main__':
     ta_path = 'structure_files/TA_contact.txt'
     form_link = gb.get_link(config['exams']['name'])
     name = config['exams']['name']
+
+    ## Verify that sub_path has not already been distributed.
+    if os.path.exists(sub_path + '/ta_exam_workload.csv'):
+        prompt = input('These exams have already been distributed to TAs.\nWould you like to re-distribute? (Y/N)')
+        if prompt != 'Y':
+            sys.exit()
     distribute(sub_path, ta_path, form_link, name)
