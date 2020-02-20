@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, time
 sys.path.append('.')
 import pandas as pd
 from examwiz_pkg.examwiz_pkg.rprt_app import reporter as rp
@@ -9,7 +9,7 @@ import configparser
 if __name__ == '__main__':
     config = configparser.ConfigParser()
     config.read('structure_files/config.ini')
-    submissions_path = config['exams']['path'] + '\student_details.csv'
+    submissions_path = config['exams']['path']
 
     report_path = submissions_path + '/reports/'
     student_contact = submissions_path + '/student_details.csv'
@@ -21,18 +21,26 @@ if __name__ == '__main__':
         a = str(std['student_id'])+'.pdf'
         b = std['name'].replace("'", "").lstrip()+'.pdf'
         #print(a, b)
-        os.rename(report_path + a, report_path + b)
         try:
-            em = ml.create_attached_message(
-                sender='charles.cohen@nycdatascience.com',
-                to=std.email.strip(),
-                subject=f'{exam_name} Grade Report',
-                msg=f'Hello {std["name"]}\nAttached is your Grade Report for {exam_name}\nPlease contact your grading TA with any questions.',
-                file_dir=report_path,
-                filenames=[b])
-            ml.send_message(em)
-            os.rename(report_path + b, report_path + a)
-            print('Report sent to:', std['name'])
+            os.rename(report_path + a, report_path + b)
+            try:
+                # Create email message
+                time.sleep(0.25)
+                em = ml.create_attached_message(
+                    sender='charles.cohen@nycdatascience.com',
+                    to=std.email.strip(),
+                    subject=f'{exam_name} Grade Report',
+                    msg=f'Hello {std["name"]}\nAttached is your Grade Report for {exam_name}\nPlease contact your grading TA with any questions.',
+                    file_dir=report_path,
+                    filenames=[b])
+
+                # Send emails out
+                ml.send_message(em)
+                os.rename(report_path + b, report_path + a)
+                print('Report sent to:', std['name'])
+            except FileNotFoundError:
+                print('Report not found for:', std["name"])
+                os.rename(report_path + b, report_path + a)
         except FileNotFoundError:
-            print('Report not found for:', std["name"])
-            os.rename(report_path + b, report_path + a)
+            print('Report not found for:', std['name'])
+            continue

@@ -35,7 +35,7 @@ def distribute(submissions_path, ta_details_path, form_link, name):
             filenames=exams
         )
         #print(tas[i][0], exams)
-        ml.send_message(em)
+        #ml.send_message(em)
     pd.DataFrame(workload).to_csv(submissions_path + "/ta_exam_workload.csv")
 
 if __name__ == '__main__':

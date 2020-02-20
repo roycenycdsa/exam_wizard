@@ -10,10 +10,11 @@ config.read('structure_files/config.ini')
 exam_name = config['exams']['name']
 sub_path = config['exams']['path']
 
-#gradebook = gb.read_grade_book(exam_name)
-gradebook = pd.read_csv(sub_path + "r_midterm.csv")
+gradebook = gb.read_grade_book(exam_name)
 
-student_key = pd.read_csv(sub_path + 'student_details.csv')
+#gradebook = pd.read_csv(sub_path + "r_midterm.csv")
+
+student_key = pd.read_csv(sub_path + '/student_details.csv')
 
 exam_details = pd.read_json("./structure_files/exam_details.json")
 
