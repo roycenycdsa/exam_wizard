@@ -221,6 +221,7 @@ def fmt_section(path, pdf, section_name, section_str, gradebook,
     pdf.ln(2)
     pdf.set_x(x_text)
     pdf.multi_cell(90, 5, txt=comment, align = "L", border = 0)
+    temp2 = pdf.get_y()
 
     pdf.set_y(temp)
     pdf.ln(4)
@@ -234,7 +235,7 @@ def fmt_section(path, pdf, section_name, section_str, gradebook,
     # do some question formatting here
     pdf.ln(2)
 
-    y_space = pdf.get_y()
+    y_space = pdf.get_y() if temp2 < pdf.get_y() else temp2
 
     for item in section_str.items():
         align = "L" if align == "R" else "R"
@@ -305,11 +306,12 @@ def fmt_question(path, pdf, question_name, question_text, gradebook,
     pdf.set_xy(x_text, temp_y)
     pdf.multi_cell(90, 5, txt=comment, align = "L", border = 0)
 
+    temp_y = pdf.get_y()
 
     pdf.set_y(temp)
     pdf.image(path+"images/" + file_tag + ".png", x = x_image, w = 90)
-
-
+    if pdf.get_y < temp_y:
+        pdf.set_y(temp_y)
 
 '''
 Legacy might be reintroduced in a further refactor
