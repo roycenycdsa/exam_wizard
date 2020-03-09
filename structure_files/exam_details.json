@@ -121,71 +121,76 @@
         "gradebook": "1mzjHqTFNz2qfnOb9FKb74IuUe4GLDdqExHZscsIs2cA",
         "formlink": "https://docs.google.com/forms/d/e/1FAIpQLSfhrthrM_-clN2mNsI2aCHHbn1ghCAxL2tZCya8rQtBxAAOBg/viewform",
         "structure": {
-            "Exploratory Data Analysis": [
+            "Python Machine Learning Midterm": [
                 {
-                    "Subquestion 1": [
-                        "Counting the Data",
-                        5
+                    "Exploratory Data Analysis": [
+                        {
+                            "Subquestion 1": [
+                                "Counting the Data",
+                                5
+                            ],
+                            "Subquestion 2": [
+                                "Compare Ratings",
+                                5
+                            ],
+                            "Subquestion 3": [
+                                "Active Users and Popular Restaurants",
+                                5
+                            ],
+                            "Subquestion 4": [
+                                "Train a Logistic Regression",
+                                10
+                            ],
+                            "Subquestion 5": [
+                                "Create a Null Model",
+                                5
+                            ]
+                        },
+                        30
                     ],
-                    "Subquestion 2": [
-                        "Compare Ratings",
-                        5
-                    ],
-                    "Subquestion 3": [
-                        "Active Users and Popular Restaurants",
-                        5
-                    ],
-                    "Subquestion 4": [
-                        "Train a Logistic Regression",
-                        10
-                    ],
-                    "Subquestion 5": [
-                        "Create a Null Model",
-                        5
+                    "Building the Forest": [
+                        {
+                            "Step 1": [
+                                "Combining User Data",
+                                5
+                            ],
+                            "Step 2": [
+                                "Combining Location Data",
+                                5
+                            ],
+                            "Step 3": [
+                                "Merging User and Location Data",
+                                5
+                            ],
+                            "Step 4": [
+                                "Report Missingness",
+                                5
+                            ],
+                            "Step 5": [
+                                "Train the Forest",
+                                10
+                            ],
+                            "Step 6": [
+                                "Grid Search",
+                                20
+                            ],
+                            "Step 7": [
+                                "Verifying Your Results",
+                                15
+                            ],
+                            "Step 8": [
+                                "Feature Importance",
+                                5
+                            ],
+                            "Step 9": [
+                                "Extra Credit",
+                                0
+                            ]
+                        },
+                        70
                     ]
                 },
-                30
-            ],
-            "Building the Forest": [
-                {
-                    "Step 1": [
-                        "Combining User Data",
-                        5
-                    ],
-                    "Step 2": [
-                        "Combining Location Data",
-                        5
-                    ],
-                    "Step 3": [
-                        "Merging User and Location Data",
-                        5
-                    ],
-                    "Step 4": [
-                        "Report Missingness",
-                        5
-                    ],
-                    "Step 5": [
-                        "Train the Forest",
-                        10
-                    ],
-                    "Step 6": [
-                        "Grid Search",
-                        20
-                    ],
-                    "Step 7": [
-                        "Verifying Your Results",
-                        15
-                    ],
-                    "Step 8": [
-                        "Feature Importance",
-                        5
-                    ],
-                    "Step 9": [
-                        "Extra Credit",
-                        0
-                    ]
-                },
-                70
+                100
             ]
         }
     }
