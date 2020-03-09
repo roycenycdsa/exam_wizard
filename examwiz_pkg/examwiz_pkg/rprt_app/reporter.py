@@ -49,12 +49,14 @@ def produce_distplot(path, gradebook_column, student_score, file_tag = "", out_o
                                 bins = len(gradebook_column.unique()), density = True, color = 'grey')
     dist_curve = sns.distplot(gradebook_column.astype(int), hist=False)
 
-    patches[idx].set_fc('r')
+    if not admin:
+        patches[idx].set_fc('r')
+        red_patch = mpatches.Patch(color = 'red', label = label)
+        dist_curve.legend(handles=[red_patch])
+
     plt.xlabel("Score out of %s"%(out_of))
     plt.xlim([min_score,out_of])
 
-    red_patch = mpatches.Patch(color = 'red', label = label)
-    dist_curve.legend(handles=[red_patch])
 
     if not os.path.isdir(path+"images/"):
         os.makedirs(path+"images/")
@@ -138,7 +140,8 @@ def percentile(lst):
     return percentile_scores
 
 def section_total(df, section_name, exam_structure):
-    df[section_name + " Total"] = df[exam_structure[section_name][0].keys()].astype('int64').sum(axis=1)
+    df.loc[::,exam_structure[section_name][0].keys()] = df.loc[::,exam_structure[section_name][0].keys()].astype('int64')
+    df[section_name + " Total"] = df[exam_structure[section_name][0].keys()].sum(axis=1)
     return df
 
 
@@ -187,7 +190,8 @@ def fmt_section(path, pdf, section_name, section_str, gradebook,
         Median score: %s out of %s'''%(exam_to_process.loc['mean', section_name + " Total"], out_of,
              exam_to_process.loc['median', section_name + " Total"], out_of)
 
-        produce_distplot(path, gradebook[section_name + " Total"], exam_to_process.loc['median', section_name + " Total"], file_tag = file_tag, out_of = out_of)
+        produce_distplot(path, gradebook[section_name + " Total"], exam_to_process.loc['median', section_name + " Total"], 
+                         file_tag = file_tag, out_of = out_of, admin = admin)
 
     else:
         comment_col = [col for col in gradebook.columns if section_name in col and "Total" not in col]
@@ -310,7 +314,7 @@ def fmt_question(path, pdf, question_name, question_text, gradebook,
 
     pdf.set_y(temp)
     pdf.image(path+"images/" + file_tag + ".png", x = x_image, w = 90)
-    if pdf.get_y < temp_y:
+    if pdf.get_y() < temp_y:
         pdf.set_y(temp_y)
 
 '''
@@ -425,6 +429,8 @@ def process_gradebook(gradebook, student_keys, exam_str, path="./", admin_only =
     if not os.path.isdir(path):
         raise ValueError("The path specified does not exist.")
 
+
+    # I think here is where the bug exists,
     if admin_only:
         pass
     else:
@@ -470,14 +476,19 @@ def process_gradebook(gradebook, student_keys, exam_str, path="./", admin_only =
         elif type(item[1][0] == str):
             ## process question
             to_sum.append(item[0])
+            gradebook.loc[::,item[0]] = gradebook.loc[::,item[0]].astype('int64')
     print(to_sum)
     print(to_percentile)
+
+    #gradebook.loc[::,to_sum] = gradebook[to_sum].astype('int64')
+
+    #gradebook.loc[::,to_percentile] = gradebook[to_percentile].astype('int64')
+
     if admin_only:
         gradebook['Total Score'] = gradebook[to_sum].astype('int64').sum(axis=1)
 
         percentile_dict = {question:percentile(gradebook[question]) for question in to_percentile}
 
-#         num_ids = len(gradebook['Student ID'].unique())
 
     else:
         gradebook_names['Total Score'] = gradebook_names[to_sum].astype('int64').sum(axis=1)
@@ -532,7 +543,7 @@ def process_single_report(path, student_id, gradebook, exam_str, percentile_dict
                             total_score_median, out_of)
 
         produce_distplot(path, gradebook['Total Score'], int(total_score_median),
-                         file_tag = "Overall_Graph", out_of = out_of)
+                         file_tag = "Overall_Graph", out_of = out_of, admin = admin)
 
 
     else:
