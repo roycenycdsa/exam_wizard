@@ -193,5 +193,151 @@
                 100
             ]
         }
+    },
+    {
+        "name": "Final Exam",
+        "gradebook": "1M5z1bV5tJiP35Q3bFYPU_pt-hnfetZnbzM6f06LIVns",
+        "formlink": "https://docs.google.com/forms/d/e/1FAIpQLSduMdvS_7ozhPO05_ED6k7H_rxSVJCmKUp-7eqBSPYVBgKZDw/viewform?usp=sf_link",
+        "structure": {
+            "Final Exam": [
+                {
+                    "Question 1": [
+                        "thousands_with_commas",
+                        10
+                    ],
+                    "Question 2": [
+                        "Rational Classes",
+                        10
+                    ],
+                    "Question 3": [
+                        {
+                            "Question 3a": [
+                                "PCA Pros and Cons",
+                                2
+                            ],
+                            "Question 3b": [
+                                "Naive Bayes Pros and Cons",
+                                2
+                            ],
+                            "Question 3c": [
+                                "Assumptions of MLR",
+                                2
+                            ],
+                            "Question 3d": [
+                                "K-Nearest Neighbors Behaviors",
+                                1
+                            ],
+                            "Question 3e": [
+                                "Adjusted R Squared",
+                                1
+                            ],
+                            "Question 3f.i": [
+                                "Correlation",
+                                1
+                            ],
+                            "Question 3f.ii": [
+                                "Causation",
+                                1
+                            ]
+                        },
+                        10
+                    ],
+                    "Question 4": [
+                        {
+                            "Question 4a": [
+                                "Steps of K-Fold CV",
+                                5
+                            ],
+                            "Question 4b": [
+                                "Maximum Likelihood Estimation",
+                                5
+                            ]
+                        },
+                        10
+                    ],
+                    "Question 5": [
+                        {
+                            "Question 5a": [
+                                "Implementing and Using Lambda for Ridge and Lasso",
+                                5
+                            ],
+                            "Question 5b": [
+                                "Implementing and Using Epsilon and Budget for SVM",
+                                5
+                            ]
+                        },
+                        10
+                    ],
+                    "Question 6": [
+                        "Bias-Variance Trade-off and Cross Validation with Lasso",
+                        10
+                    ],
+                    "Question 7": [
+                        {
+                            "Question 7a": [
+                                "Calculating Specificty",
+                                3
+                            ],
+                            "Question 7b": [
+                                "Calculating Accuracy",
+                                3
+                            ],
+                            "Question 7c": [
+                                "True Positives over True Negatives",
+                                4
+                            ]
+                        },
+                        10
+                    ],
+                    "Question 8": [
+                        "Hit and Run Taxis",
+                        10
+                    ],
+                    "Question 9": [
+                        {
+                            "Question 9a.i": [
+                                "Pros and Cons of a Single Tree",
+                                4
+                            ],
+                            "Question 9a.ii": [
+                                "Pros and Cons of a RandomForest",
+                                4
+                            ],
+                            "Question 9b": [
+                                "Navigating the Tree",
+                                2
+                            ]
+                        },
+                        10
+                    ],
+                    "Question 10": [
+                        {
+                            "Question 10a": [
+                                "Calculating Confidence Intervals",
+                                2
+                            ],
+                            "Question 10b": [
+                                "Principal Hypothesis Tests",
+                                2
+                            ],
+                            "Question 10c": [
+                                "Interpreting Betas",
+                                2
+                            ],
+                            "Question 10d": [
+                                "Predicting Scores",
+                                2
+                            ],
+                            "Question 10e": [
+                                "Side-effects of Upsampling",
+                                2
+                            ]
+                        },
+                        10
+                    ]
+                },
+                100
+            ]
+        }
     }
 ]
