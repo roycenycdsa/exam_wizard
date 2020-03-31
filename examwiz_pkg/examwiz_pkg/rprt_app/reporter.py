@@ -306,7 +306,7 @@ def fmt_section(path, pdf, section_name, section_str, gradebook,
         # We know the setion_name should be a column, this might be able to be refactored into just keying into the DF/series
         comment_col = [col for col in gradebook.columns if section_name in col and "Total" not in col]
         print(exam_to_process[comment_col].values[0])
-        comment_typecast = str(exam_to_process[comment_col].values[0].encode('UTF-8', 'ignore'))
+        comment_typecast = str(exam_to_process[comment_col].values[0]).encode('UTF-8', 'ignore')
         comment_typecast = comment_typecast[slice(2, len(comment_typecast)-1)]
         comment = "TA Comment: %s"%(comment_typecast)
 
