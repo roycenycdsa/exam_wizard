@@ -28,8 +28,8 @@ creds = None
 # The file token.pickle stores the user's access and refresh tokens, and is
 # created automatically when the authorization flow completes for the first
 # time.
-if os.path.exists('{}/token.pickle'.format(cred_path)):
-    with open('{}/token.pickle'.format(cred_path), 'rb') as token:
+if os.path.exists('{}/credentials/token.pickle'.format(cred_path)):
+    with open('{}/credentials/token.pickle'.format(cred_path), 'rb') as token:
       creds = pickle.load(token)
 # If there are no (valid) credentials available, let the user log in.
 if not creds or not creds.valid:
@@ -37,10 +37,10 @@ if not creds or not creds.valid:
         creds.refresh(Request())
     else:
         flow = InstalledAppFlow.from_client_secrets_file(
-            '{}/credentials.json'.format(cred_path), SCOPES)
+            '{}/credentials/credentials.json'.format(cred_path), SCOPES)
         creds = flow.run_local_server(port=0)
     # Save the credentials for the next run
-    with open('{}/token.pickle'.format(cred_path), 'wb') as token:
+    with open('{}/credentials/token.pickle'.format(cred_path), 'wb') as token:
         pickle.dump(creds, token)
 
 
