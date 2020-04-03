@@ -78,7 +78,7 @@ def send_reminder(ta, exams, key, form_link):
         f.read
 
     msg = create_attached_message(
-        sender='charles.cohen@nycdatascience.com',
+        sender='xiangwei.zhong@nycdatascience.com',
         to=ta[0],
         subject='Exams remain to be graded',
         msg=f"""Hi {ta[1]},

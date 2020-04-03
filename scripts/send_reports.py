@@ -7,13 +7,17 @@ import configparser
 
 
 if __name__ == '__main__':
-    config = configparser.ConfigParser()
-    config.read('structure_files/config.ini')
-    submissions_path = config['exams']['path']
+    # Access the file path of the exam
+    sub_path = sys.argv[1]
+    sub_path = r'{}'.format(sub_path)
 
-    report_path = submissions_path + '/reports/'
-    student_contact = submissions_path + '/student_details.csv'
+    # Access the name of the exam
+    config = configparser.ConfigParser()
+    config.read(sub_path + '/config.ini')
     exam_name = config['exams']['name']
+
+    report_path = sub_path + '/reports/'
+    student_contact = sub_path + '/student_details.csv'
 
     df = pd.read_csv(student_contact)
     for i in range(df.shape[0]):
@@ -27,7 +31,7 @@ if __name__ == '__main__':
                 # Create email message
                 time.sleep(0.25)
                 em = ml.create_attached_message(
-                    sender='charles.cohen@nycdatascience.com',
+                    sender='xiangwei.zhong@nycdatascience.com',
                     to=std.email.strip(),
                     subject=f'{exam_name} Grade Report',
                     msg=f'Hello {std["name"]}\nAttached is your Grade Report for {exam_name}\nPlease contact your grading TA with any questions.',

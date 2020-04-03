@@ -1,5 +1,5 @@
 import pandas as pd
-import sys, os
+import sys, os, time
 sys.path.append('.')
 from examwiz_pkg.examwiz_pkg.gapi_app import mailer as ml
 from examwiz_pkg.examwiz_pkg.gapi_app import grade_book as gb
@@ -26,8 +26,9 @@ def distribute(submissions_path, ta_details_path, form_link, name):
     for i in range(len(tas)):
         exams = submissions[(i * num_submits // len(tas)):((i + 1) * num_submits // len(tas))]
         workload.append({'ta': tas[i][0], 'workload': exams, 'email': tas[i][1]})
+        time.sleep(0.25)
         em = ml.create_attached_message(
-            sender='charles.cohen@nycdatascience.com',
+            sender='xiangwei.zhong@nycdatascience.com',
             to=tas[i][1],
             subject='Exams to grade: ' + name,
             msg=ml.grade_these(tas[i][0], form_link, name),
@@ -39,16 +40,28 @@ def distribute(submissions_path, ta_details_path, form_link, name):
     pd.DataFrame(workload).to_csv(submissions_path + "/ta_exam_workload.csv")
 
 if __name__ == '__main__':
+    # Access the file path from command line argument
+    sub_path = sys.argv[1]
+    sub_path = r'{}'.format(sub_path)
+
+    # Get the config file of the exam
     config = configparser.ConfigParser()
-    config.read('structure_files/config.ini')
-    sub_path = config['exams']['path']
+    config.read(sub_path + '/config.ini')
+
+    # Get the name of the exam
+    exam_name = config['exams']['name']
+
+    # Get the TA contacts
     ta_path = 'structure_files/TA_contact.txt'
-    form_link = gb.get_link(config['exams']['name'])
-    name = config['exams']['name']
+    
+    # Attach the google survey form to the email
+    #form_link = gb.get_link(exam_name)
+    form_link = config['exams']['formlink']
 
     ## Verify that sub_path has not already been distributed.
     if os.path.exists(sub_path + '/ta_exam_workload.csv'):
-        prompt = input('These exams have already been distributed to TAs.\nWould you like to re-distribute? (Y/N)')
-        if prompt != 'Y':
+        prompt = input('These exams have already been distributed to TAs.\nPress any key to exit.')
+        if len(prompt) != 0:
             sys.exit()
-    distribute(sub_path, ta_path, form_link, name)
+
+    distribute(sub_path, ta_path, form_link, exam_name)
