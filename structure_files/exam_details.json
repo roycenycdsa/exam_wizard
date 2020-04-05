@@ -1,8 +1,6 @@
 [
     {
         "name": "Python Midterm",
-        "gradebook": "1LxSk2Kpbio9J7x9mxI5V3T0Cjx9POrTwLyLDWUNLXm8",
-        "formlink": "https://docs.google.com/forms/d/e/1FAIpQLSc-bf4hO3Ot6BlwHAYXbmCupx3_4CepUueuPl-yojkbs6i9ag/viewform",
         "structure": {
             "Python Exam": [
                 {
@@ -33,14 +31,10 @@
     },
     {
         "name": "Example Exam",
-        "gradebook": "1EslwwOrJuor0NyolZTmkQHe6Dc7oN2Ta3TZatuq_Qnc",
-        "formlink": "https://docs.google.com/forms/d/e/1FAIpQLSdeOgHuin1UD9vCmjezzF0C7rF5h7nUz9RPqLMblcEBlv8i6g/viewform",
         "structure": {}
     },
     {
         "name": "R Midterm",
-        "gradebook": "1u0Oy0LTGmMQxvjnL1s_pc1jho-eSp-kOgsmHR1cae00",
-        "formlink": "https://docs.google.com/forms/d/e/1FAIpQLSfUfw6jEXxQhUNwzbSkjhXf_ZFlYWBAUwYQVi8DYy2qnSkcLQ/viewform",
         "structure": {
             "R Exam": [
                 {
@@ -118,8 +112,6 @@
     },
     {
         "name": "Python Machine Learning Midterm",
-        "gradebook": "1mzjHqTFNz2qfnOb9FKb74IuUe4GLDdqExHZscsIs2cA",
-        "formlink": "https://docs.google.com/forms/d/e/1FAIpQLSfhrthrM_-clN2mNsI2aCHHbn1ghCAxL2tZCya8rQtBxAAOBg/viewform",
         "structure": {
             "Python Machine Learning Midterm": [
                 {
@@ -196,8 +188,6 @@
     },
     {
         "name": "Final Exam",
-        "gradebook": "1M5z1bV5tJiP35Q3bFYPU_pt-hnfetZnbzM6f06LIVns",
-        "formlink": "https://docs.google.com/forms/d/e/1FAIpQLSduMdvS_7ozhPO05_ED6k7H_rxSVJCmKUp-7eqBSPYVBgKZDw/viewform?usp=sf_link",
         "structure": {
             "Final Exam": [
                 {
