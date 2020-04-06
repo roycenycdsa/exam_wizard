@@ -23,9 +23,21 @@ def create_grade_book(name, in_domain=True):
 def read_by_id(file_id):
     result = st_service.spreadsheets().values().get(
         spreadsheetId=file_id, range='Form Responses 1').execute()
-    return pd.DataFrame(columns=result['values'][0], data=result['values'][1:])
+
+    # check the dimensions of the columns
+    num_col1 = len(result['values'][0])
+
+    num_col2 = len(result['values'][1:][0])
+
+    num_col = min(num_col1, num_col2)
+
+    return pd.DataFrame(columns=result['values'][0][0:num_col], data=result['values'][1:])
+    #return pd.DataFrame(result['values'][1:]).shape
+    #return pd.DataFrame(data=result['values'][0]).shape
+    #return len(result['values'][1:][0])
 
 def read_grade_book(name):
+
     data = json.load(open('structure_files/exam_details.json', 'r'))
     try:
         file_id = list(filter(lambda l: l['name'] == name, data))[0]['gradebook']

@@ -5,12 +5,21 @@ from examwiz_pkg.examwiz_pkg.rprt_app import reporter as rp
 from examwiz_pkg.examwiz_pkg.gapi_app import grade_book as gb
 import configparser
 
-config = configparser.ConfigParser()
-config.read('structure_files/config.ini')
-exam_name = config['exams']['name']
-sub_path = config['exams']['path']
+sub_path = sys.argv[1]
+sub_path = r'{}'.format(sub_path)
 
-gradebook = gb.read_grade_book(exam_name)
+# Get the config file of the exam
+config = configparser.ConfigParser()
+config.read(sub_path + '/config.ini')
+
+# Get the name of the exam
+exam_name = config['exams']['name']
+
+file_id = config['exams']['gradebook']
+
+#gradebook = gb.read_grade_book(exam_name)
+
+gradebook = gb.read_by_id(file_id)
 
 #gradebook = pd.read_csv(sub_path + "r_midterm.csv")
 
