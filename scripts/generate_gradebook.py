@@ -1,5 +1,5 @@
 import sys
-sys.path.append('..')
+sys.path.append('.')
 from examwiz_pkg.examwiz_pkg.gapi_app import grade_book as gb
 import pandas as pd
 import webbrowser
@@ -15,8 +15,12 @@ if "y" in create_book_flag.lower():
 
     exam2 = gb.create_grade_book(gradebook_name, in_domain = True)
 
-    print("New Gradebook created. Please stand by while we fetch your new gradebook.\n")
+    print("New Gradebook created.\n")
 
-    webbrowser.open(gb.get_link(exam2))
+    #form_link = "https://docs.google.com/forms/d/e/1FAIpQLSfhrthrM_-clN2mNsI2aCHHbn1ghCAxL2tZCya8rQtBxAAOBg/viewform"
 
-print("Thank you for using ExamWizard(TM)!")
+    #webbrowser.open(gb.get_link(exam2))
+
+    #webbrowser.open(form_link)
+
+#print("Thank you for using ExamWizard(TM)!")
