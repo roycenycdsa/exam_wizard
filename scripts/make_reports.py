@@ -17,11 +17,14 @@ exam_name = config['exams']['name']
 
 file_id = config['exams']['gradebook']
 
+# load the gradebook by exam_name defunct
 #gradebook = gb.read_grade_book(exam_name)
 
+# load the gradebook by google sheet id
 gradebook = gb.read_by_id(file_id)
 
-#gradebook = pd.read_csv(sub_path + "r_midterm.csv")
+# load the gradebook by local filepath
+#gradebook = pd.read_csv('C:\\NYCDSA\\exams\\BDS021\\First_Midterm\\R_Midterm\\BDS021_R_Midterm.csv')
 
 student_key = pd.read_csv(sub_path + '/student_details.csv')
 
