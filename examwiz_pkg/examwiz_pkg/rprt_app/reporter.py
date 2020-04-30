@@ -299,8 +299,8 @@ def fmt_section(path, pdf, section_name, section_str, gradebook,
         Median score: %s out of %s'''%(exam_to_process.loc['mean', section_name + " Total"], out_of,
              exam_to_process.loc['median', section_name + " Total"], out_of)
 
-        produce_distplot(path, gradebook[section_name + " Total"], exam_to_process.loc['median', section_name + " Total"],
-                         file_tag = file_tag, out_of = out_of, admin = admin)
+        produce_distplot(path, gradebook[section_name + " Total"], exam_to_process.loc['median', 
+        	section_name + " Total"], file_tag = file_tag, out_of = out_of, admin = admin)
 
     else:
         # We know the setion_name should be a column, this might be able to be refactored into just keying into the DF/series
@@ -421,19 +421,25 @@ def fmt_question(path, pdf, question_name, question_text, gradebook,
 
         score_report = '''
         Average Score: %.2f out of %s
-        Median score: %s out of %s'''%(exam_to_process.loc['mean', question_name], out_of,
-             exam_to_process.loc['median', question_name], out_of)
+        Median score: %s out of %s'''%(exam_to_process.loc['mean', 
+        	question_name], out_of, exam_to_process.loc['median', question_name], 
+        	out_of)
 
-        produce_hist(path, gradebook[question_name], exam_to_process.loc['median', question_name], question_name, file_tag = file_tag, out_of = out_of, admin = admin)
+        produce_hist(path, gradebook[question_name], 
+        	exam_to_process.loc['median', question_name], 
+        	question_name, file_tag = file_tag, out_of = out_of, admin = admin)
 
     else:
-        comment_typecast = str(exam_to_process[question_name + " Comment"].encode('UTF-8', 'ignore'))
+        comment_typecast = str(exam_to_process[question_name + 
+        	" Comment"].encode('UTF-8', 'ignore'))
         comment_typecast = comment_typecast[slice(2, len(comment_typecast)-1)]
         comment = "TA Comment: %s"%(comment_typecast)
 
         score_report = "\nScore: %s/%s"%(exam_to_process[question_name], out_of)
 
-        produce_hist(path, gradebook[question_name], exam_to_process[question_name], question_name, file_tag = file_tag, out_of = out_of)
+        produce_hist(path, gradebook[question_name], 
+        	exam_to_process[question_name], question_name, 
+        	file_tag = file_tag, out_of = out_of)
 
 
     print(question_name, " is aligned ", align)
@@ -577,8 +583,10 @@ def process_gradebook(gradebook, student_keys, exam_str, path="./", admin_only =
 
     print("*"*50, "\n", "Diagnostic", "\n", exam_str[0])
 
+    # save the structure of the exam as a dictionary
     exam_str = exam_str[0]
 
+    # make sure that the path starts with '/'
     if path[-1] != "/":
         path += "/"
 
@@ -586,38 +594,47 @@ def process_gradebook(gradebook, student_keys, exam_str, path="./", admin_only =
         raise ValueError("The path specified does not exist.")
 
 
+	##################### Merge the student_keys file with the gradebook file #####################
     if admin_only:
         pass
     else:
+    	# subsetting the dataset
         student_keys = student_keys[['name', 'student_id']]
 
+        # needs to fix this part!!!!
         student_keys.loc[::,'name'] = student_keys['name'].str.replace("\W['\"]|['\"]\W", "")
         student_keys.loc[::,'name'] = student_keys['name'].str.replace("^\s", "")
 
-        #print(student_keys.columns)
-        #print(gradebook.columns)
+        # right merge of gradebook with student_keys on 'Student ID'
+        gradebook_names = pd.merge(gradebook, student_keys, how = 'right', left_on = 'Student ID', 
+        	right_on = 'student_id')
 
-        gradebook_names = pd.merge(gradebook, student_keys, how = 'left', left_on = 'Student ID', right_on = 'student_id')
-
+        # drop the repeated column
         gradebook_names.drop('student_id', axis = 1, inplace=True)
 
+        # drop nas; though it is not that necessary
         gradebook_names.dropna(inplace=True)
 
-
+    ###############################################################################################
+    
     print("Past first block")
 
+    # get the name of the exam, i.g. 'Python Exam'
     tag = list(exam_str.keys())[0]
 
     print("*"*50, "\n", tag, "\n", "*"*50)
 
+    # empty bracket 
     to_sum = []
     to_percentile = ['Total Score']
 
 
     # here we use exam_str to parse the exam into questions and sections.
-    print("passing ", exam_str[tag])
+    print("Processing " + tag + ' Structure:')
     for item in exam_str[tag][0].items():
         print("Inside for-loop, currently on ", item)
+
+        # this is to determine if there is subsection
         if type(item[1][0]) == dict:
             ## process section
             print("Section name:", item[0])
@@ -630,11 +647,18 @@ def process_gradebook(gradebook, student_keys, exam_str, path="./", admin_only =
     #         print("Out of", item[1][1])
     #         print(example_df[item[0] + " Total"].head(5))
 
+    	# this is when there is no subsection
         elif type(item[1][0] == str):
             ## process question
             ## this is like a small version of section_total
             to_sum.append(item[0])
-            gradebook.loc[::,item[0]] = gradebook.loc[::,item[0]].astype('int64')
+
+            # Convert the score of each question to numeric
+            #gradebook.loc[::,item[0]] = gradebook.loc[::,item[0]].astype('int64')
+            gradebook_names[[item[0]]] = gradebook_names[[item[0]]].apply(pd.to_numeric)
+
+            gradebook[[item[0]]] = gradebook[[item[0]]].apply(pd.to_numeric)
+
     print(to_sum)
     print(to_percentile)
 
@@ -706,6 +730,8 @@ def process_single_report(path, student_id, gradebook, exam_str, percentile_dict
 
     # generated regardless of type
     tag = list(exam_str.keys())[0]
+
+    # the highest possible score for the exam
     out_of = exam_str[tag][1]
 
 
@@ -716,7 +742,8 @@ def process_single_report(path, student_id, gradebook, exam_str, percentile_dict
         total_score_mean = exam_to_process.loc['mean', 'Total Score']
         total_score_median = exam_to_process.loc['median', 'Total Score']
 
-        file_name = "Overall_Student_Report_"+tag.replace(" ", "") + ".pdf"
+        #file_name = "Overall_Student_Report_"+tag.replace(" ", "") + ".pdf"
+        filename = 'admin_report'
         grader = "Admin Report"
 
         intro = '''This is the overall exam report for %s.'''%(tag)
@@ -737,12 +764,18 @@ def process_single_report(path, student_id, gradebook, exam_str, percentile_dict
 
         # extract repeated information
         grader = exam_to_process['Grader']
-        file_name = exam_to_process['name'].strip()+"_"+tag+".pdf"
+
+        # we extract the first name of the student as the filename
+        filename = exam_to_process['name'].split()[0].strip()
+
+        #file_name = exam_to_process['name'].strip()+"_"+tag+".pdf"
         total_score = exam_to_process['Total Score']
 
         # set up text info
         intro = '''Hello %s,
-        \t\tThis is your exam report for the %s. Your grader was %s, so please feel free to reach out to them if you have additional questions about the exam.'''%(exam_to_process['name'], tag, grader)
+        \t\tThis is your exam report for the %s. Your grader was %s, so please feel free
+         to reach out to them if you have additional questions about the exam.'''
+         %(exam_to_process['name'], tag, grader)
 
         comment_typecast = str(exam_to_process["Exam Comment"].encode('UTF-8', 'ignore'))
         comment_typecast = comment_typecast[slice(2, len(comment_typecast)-1)]
@@ -757,10 +790,10 @@ def process_single_report(path, student_id, gradebook, exam_str, percentile_dict
         print("*"*50, "\n", path, "\n", "*"*50)
 
         # create a distribution for the overall score.
-        produce_distplot(path, gradebook['Total Score'].astype(int), exam_to_process['Total Score'],
-                         file_tag = "Overall_Graph", out_of = out_of)
+        produce_distplot(path, gradebook['Total Score'].astype(int), 
+        	exam_to_process['Total Score'], file_tag = "Overall_Graph", out_of = out_of)
 
-    print("All done!\n\n\n\n", "*"*50)
+    
 
     # initiate PDF object, format header
 
@@ -772,7 +805,7 @@ def process_single_report(path, student_id, gradebook, exam_str, percentile_dict
     pdf.set_fill_color(255, 0, 0)
     pdf.line(10, 35, 200, 35)
 
-    pdf.set_font("Arial", size=10)
+    pdf.set_font("Arial", size=12)
     pdf.ln(30)
     pdf.multi_cell(190, 6, txt=intro, align="L")
     pdf.ln(2)
@@ -827,7 +860,9 @@ def process_single_report(path, student_id, gradebook, exam_str, percentile_dict
         os.makedirs(path+"reports/")
 
     # and then generate the report, along with printing the pdf_path for a quick sanity check.
-    pdf_path = path+"reports/"+student_id+".pdf"
-    pdf_path = pdf_path.replace('\u2019', "")
+    pdf_path = path+"reports/"+filename+".pdf"
+    #pdf_path = path+"reports/"+student_id+".pdf"
+    #pdf_path = pdf_path.replace('\u2019', "")
     print(pdf_path)
+    print("Report generated!\n\n\n\n", "*"*50)
     pdf.output(pdf_path)
