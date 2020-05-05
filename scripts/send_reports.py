@@ -15,28 +15,35 @@ if __name__ == '__main__':
     config = configparser.ConfigParser()
     config.read(sub_path + '/config.ini')
     exam_name = config['exams']['name']
+    admin_email = config['exams']['admin_email']
 
     report_path = sub_path + '/reports/'
     student_contact = sub_path + '/student_details.csv'
 
     df = pd.read_csv(student_contact)
     for i in range(df.shape[0]):
+    	# extract the row of the particular student 
         std = df.iloc[i]
-        a = str(std['student_id'])+'.pdf'
+
+        # access the report of the students
+        #a = str(std['student_id'])+'.pdf'
+        a = std['name'].split()[0].strip() + '.pdf'
         b = std['name'].replace("'", "").lstrip()+'.pdf'
         #print(a, b)
+
+
         try:
             os.rename(report_path + a, report_path + b)
             try:
                 # Create email message
                 time.sleep(0.25)
                 em = ml.create_attached_message(
-                    sender='xiangwei.zhong@nycdatascience.com',
-                    to=std.email.strip(),
-                    subject=f'{exam_name} Grade Report',
-                    msg=f'Hello {std["name"]}\nAttached is your Grade Report for {exam_name}\nPlease contact your grading TA with any questions.',
-                    file_dir=report_path,
-                    filenames=[b])
+                    sender = admin_email,
+                    to = std.email.strip(),
+                    subject = f'{exam_name} Grade Report',
+                    msg = f'Hello {std["name"]}\nAttached is your Grade Report for {exam_name}\nPlease contact your grading TA with any questions.',
+                    file_dir = report_path,
+                    filenames = [b])
 
                 # Send emails out
                 ml.send_message(em)

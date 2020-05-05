@@ -73,12 +73,12 @@ def get_ta_emails(fp):
                 emails.append(ta['email'])
     return list(zip(names, emails))
 
-def send_reminder(ta, exams, key, form_link):
+def send_reminder(ta, exams, key, form_link, admin_email):
     with open(key, 'r') as f:
         f.read
 
     msg = create_attached_message(
-        sender='xiangwei.zhong@nycdatascience.com',
+        sender = admin_email,
         to=ta[0],
         subject='Exams remain to be graded',
         msg=f"""Hi {ta[1]},
