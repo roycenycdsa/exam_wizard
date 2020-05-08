@@ -6,10 +6,10 @@ import sys
 ## Locates the jsonMap.json containing the submission encryption key
 ## And generates the student_details.csv to be used by the exam_wizard
 
-#sub_path = sys.argv[1]
-#sub_path = r'{}'.format(sub_path)
+sub_path = sys.argv[1]
+sub_path = r'{}'.format(sub_path)
 
-sub_path = 'C:\\NYCDSA\\Exams\\BDS021\\First Midterm\\Python Midterm'
+#sub_path = 'C:\\NYCDSA\\Exams\\BDS021\\First Midterm\\Python Midterm'
 
 ## Read json of student details
 df = pd.read_json(sub_path + '\\jsonMap.json').T
