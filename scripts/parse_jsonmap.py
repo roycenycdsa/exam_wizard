@@ -12,11 +12,11 @@ sub_path = r'{}'.format(sub_path)
 #sub_path = 'C:\\NYCDSA\\Exams\\BDS021\\First Midterm\\Python Midterm'
 
 ## Read json of student details
-df = pd.read_json(sub_path + '\\jsonMap.json').T
+df = pd.read_json(sub_path + '/jsonMap.json').T
 df = df[df.role == 'user']
 
 ## Generate student_details.csv
 df = df.reset_index()[['email', 'name', 'index']]
 df = df.rename(columns={"index":"student_id"})
 print(df)
-df.to_csv(sub_path + '\\student_details.csv')
+df.to_csv(sub_path + '/student_details.csv')
