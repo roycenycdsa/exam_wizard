@@ -19,11 +19,20 @@ file_id = config['exams']['gradebook']
 
 book = gb.read_by_id(file_id)
 
+#print(book.shape)
+
 key = pd.read_csv(sub_path + '/student_details.csv')
 
-question_cols = list(filter(lambda l: 'Comment' not in l and ('Question' in l or 'Problem' in l), book.columns))
+#print(book.columns)
+
+question_cols = list(filter(lambda l: 'Comment' not in l and ('Question' in l or 'Problem' in l or 'Step' in l or 'Subquestion' in l), book.columns))
+
+#print(question_cols)
+
 book['Final Grade'] = book[question_cols].astype('int32').sum(axis=1)
 book = book[['Student ID', 'Final Grade']]
+
+#print(book['Final Grade'])
 
 df = pd.merge(left=book, right=key, left_on='Student ID', right_on='student_id', how='right').sort_values('Final Grade', ascending=False)
 df[['name', 'Final Grade']].to_csv(sub_path + '/' + exam_name + '_final_grades.csv')
