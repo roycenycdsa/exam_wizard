@@ -766,16 +766,21 @@ def process_single_report(path, student_id, gradebook, exam_str, percentile_dict
         grader = exam_to_process['Grader']
 
         # we extract the first name of the student as the filename
-        filename = exam_to_process['name'].split()[0].strip()
+        names = exam_to_process['name'].split()
+
+        #last_name = exam_to_process['name'].split()[-1].strip()
+
+        separator = '_'
+
+        filename = separator.join(names)
 
         #file_name = exam_to_process['name'].strip()+"_"+tag+".pdf"
         total_score = exam_to_process['Total Score']
 
         # set up text info
         intro = '''Hello %s,
-        \t\tThis is your exam report for the %s. Your grader was %s, so please feel free
-         to reach out to them if you have additional 
-         questions about the exam.'''%(exam_to_process['name'], tag, grader)
+        \t\tThis is your exam report for the %s. Your grader was %s, so please feel free 
+        to reach out to them if you have additional questions about the exam.'''%(exam_to_process['name'], tag, grader)
 
         comment_typecast = str(exam_to_process["Exam Comment"].encode('UTF-8', 'ignore'))
         comment_typecast = comment_typecast[slice(2, len(comment_typecast)-1)]
@@ -805,7 +810,7 @@ def process_single_report(path, student_id, gradebook, exam_str, percentile_dict
     pdf.set_fill_color(255, 0, 0)
     pdf.line(10, 35, 200, 35)
 
-    pdf.set_font("Arial", size=11)
+    pdf.set_font("Arial", size=12)
     pdf.ln(30)
     pdf.multi_cell(190, 6, txt=intro, align="L")
     pdf.ln(2)
