@@ -21,13 +21,25 @@ if __name__ == '__main__':
     student_contact = sub_path + '/student_details.csv'
 
     df = pd.read_csv(student_contact)
-    for i in range(df.shape[0]):
+
+    num_submissions = df.shape[0]
+
+    idx = 0
+
+    for i in range(num_submissions):
+        # update the counter
+        idx += 1
+
     	# extract the row of the particular student 
         std = df.iloc[i]
 
         # access the report of the students
-        #a = str(std['student_id'])+'.pdf'
-        a = std['name'].split()[0].strip() + '.pdf'
+        # we extract the name of the student as the filename
+        names = std['name'].split()
+        separator = '_'
+        filename = separator.join(names)
+
+        a = filename + '.pdf'
         b = std['name'].replace("'", "").lstrip()+'.pdf'
         #print(a, b)
 
@@ -49,6 +61,7 @@ if __name__ == '__main__':
                 ml.send_message(em)
                 os.rename(report_path + b, report_path + a)
                 print('Report sent to:', std['name'])
+                print('Sent {} of {} report.'.format(idx, num_submissions + 1))
             except FileNotFoundError:
                 print('Report not found for:', std["name"])
                 os.rename(report_path + b, report_path + a)
