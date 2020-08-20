@@ -35,4 +35,4 @@ book = book[['Student ID', 'Final Grade']]
 #print(book['Final Grade'])
 
 df = pd.merge(left=book, right=key, left_on='Student ID', right_on='student_id', how='right').sort_values('Final Grade', ascending=False)
-df[['name', 'Final Grade']].to_csv(sub_path + '/' + exam_name + '_final_grades.csv')
+df[['name', 'Final Grade']].reset_index(drop = True).to_csv(sub_path + '/' + exam_name + '_final_grades.csv')

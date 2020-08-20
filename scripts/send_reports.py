@@ -20,6 +20,7 @@ if __name__ == '__main__':
     report_path = sub_path + '/reports/'
     student_contact = sub_path + '/student_details.csv'
 
+    # this is the dataframe of the student details, including whether the report has been sent or not. 
     df = pd.read_csv(student_contact)
 
     num_submissions = df.shape[0]
@@ -33,38 +34,48 @@ if __name__ == '__main__':
     	# extract the row of the particular student 
         std = df.iloc[i]
 
-        # access the report of the students
-        # we extract the name of the student as the filename
-        names = std['name'].split()
-        separator = '_'
-        filename = separator.join(names)
+        # check on the condition of whether the report of the student has been sent or not. 
+        if std['sent'] == 0:
+            # access the report of the students
+            # we extract the name of the student as the filename
+            names = std['name'].split()
+            separator = '_'
+            filename = separator.join(names)
 
-        a = filename + '.pdf'
-        b = std['name'].replace("'", "").lstrip()+'.pdf'
-        #print(a, b)
+            a = filename + '.pdf'
+            b = std['name'].replace("'", "").lstrip()+'.pdf'
+            #print(a, b)
 
 
-        try:
-            os.rename(report_path + a, report_path + b)
             try:
-                # Create email message
-                time.sleep(0.25)
-                em = ml.create_attached_message(
-                    sender = admin_email,
-                    to = std.email.strip(),
-                    subject = f'{exam_name} Grade Report',
-                    msg = f'Hello {std["name"]}\nAttached is your Grade Report for {exam_name}\nPlease contact your grading TA with any questions.',
-                    file_dir = report_path,
-                    filenames = [b])
+                os.rename(report_path + a, report_path + b)
+                try:
+                    # Create email message
+                    time.sleep(0.25)
+                    em = ml.create_attached_message(
+                        sender = admin_email,
+                        to = std.email.strip(),
+                        subject = f'{exam_name} Grade Report',
+                        msg = f'Hello {std["name"]}\nAttached is your Grade Report for {exam_name}\nPlease contact your grading TA with any questions.',
+                        file_dir = report_path,
+                        filenames = [b])
 
-                # Send emails out
-                ml.send_message(em)
-                os.rename(report_path + b, report_path + a)
-                print('Report sent to:', std['name'])
-                print('Sent {} of {} report.'.format(idx, num_submissions + 1))
+                    # Send emails out
+                    ml.send_message(em)
+                    os.rename(report_path + b, report_path + a)
+                    print('Report sent to:', std['name'])
+                    print('Sent {} of {} report.'.format(idx, num_submissions + 1))
+
+                    # Update the sent parameter; set sent to 1:
+                    df.loc[i, 'sent'] = 1
+
+                except FileNotFoundError:
+                    print('Report not found for:', std["name"])
+                    os.rename(report_path + b, report_path + a)
             except FileNotFoundError:
-                print('Report not found for:', std["name"])
-                os.rename(report_path + b, report_path + a)
-        except FileNotFoundError:
-            print('Report not found for:', std['name'])
-            continue
+                print('Report not found for:', std['name'])
+                continue
+
+
+    ## save the updated df to a new csv file
+    df.to_csv(sub_path + '/student_details.csv')
