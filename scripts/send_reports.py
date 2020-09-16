@@ -21,7 +21,7 @@ if __name__ == '__main__':
     student_contact = sub_path + '/student_details.csv'
 
     # this is the dataframe of the student details, including whether the report has been sent or not. 
-    df = pd.read_csv(student_contact)
+    df = pd.read_csv(student_contact, index_col = 0)
 
     num_submissions = df.shape[0]
 
@@ -75,6 +75,9 @@ if __name__ == '__main__':
             except FileNotFoundError:
                 print('Report not found for:', std['name'])
                 continue
+
+        else:
+            print("Report didn't send to:", std["name"])
 
 
     ## save the updated df to a new csv file

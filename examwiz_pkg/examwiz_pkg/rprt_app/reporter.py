@@ -76,7 +76,17 @@ def produce_distplot(path, gradebook_column, student_score, file_tag = "", out_o
     # and stack the distribution plot ontop of it.
     n, bins, patches = plt.hist(gradebook_column,
                                 bins = len(gradebook_column.unique()), density = True, color = 'grey')
-    dist_curve = sns.distplot(gradebook_column, hist=False)
+    #dist_curve = sns.distplot(gradebook_column, hist=False, kde_kws={'bw': 1})
+
+    try:
+        dist_curve = sns.distplot(gradebook_column, hist=False)
+    except RuntimeError as re:
+        #if str(re).startswith("Selected KDE bandwidth is 0. Cannot estimate density."):
+        dist_curve = sns.distplot(gradebook_column, hist=False, kde_kws={'bw': 2})
+    else:
+        #raise re
+        #raise RuntimeError
+        dist_curve = sns.distplot(gradebook_column, hist=False, kde_kws={'bw': 2})
 
     # if we are not generating the overall report, we now highlight the bar that represents the
     # student's score on the exam.
