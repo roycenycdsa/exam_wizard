@@ -30,18 +30,18 @@ def produce_distplot(path, gradebook_column, student_score, file_tag = "", out_o
     the Overall Report.
 
     input:
-    path: Path to where the images subfolder will be made to contain the pngs that are produced. (str)
-    gradebook_column: the column of the gradebook to visualize (pd.Series)
-    student_score: the individual student's score (this will be metadata in the Overall/Admin report) (int)
-    file_tag: additional file name information. (str)
-    out_of: Number of points the question is out of (int)
-    admin: Whether of not we are producing the Overall/Admin report (boolean)
+    path:             Path to where the images subfolder will be made to contain the pngs that are produced. (str)
+    gradebook_column: The column of the gradebook to visualize (pd.Series)
+    student_score:    The individual student's score (this will be metadata in the Overall/Admin report) (int)
+    file_tag:         additional file name information. (str)
+    out_of:           Number of points the question is out of (int)
+    admin:            Whether of not we are producing the Overall/Admin report (boolean)
 
     returns:
     None: No return type, as it saves the image to be used later.
     '''
 
-    # gotta clear the plot space
+    # clear the plot space
     plt.gcf().clf()
 
     # remove the old image (sometimes there is a bug where it won't save over the old image, so
@@ -73,7 +73,7 @@ def produce_distplot(path, gradebook_column, student_score, file_tag = "", out_o
 
     # decompose the graph elements so we can highlight the right path
     # I don't like the Seaborn histogram, so instead I decide to make one in matplotlib
-    # and stack the distribution plot ontop of it.
+    # and stack the distribution plot on top of it.
     n, bins, patches = plt.hist(gradebook_column,
                                 bins = len(gradebook_column.unique()), density = True, color = 'grey')
     #dist_curve = sns.distplot(gradebook_column, hist=False, kde_kws={'bw': 1})
@@ -82,11 +82,11 @@ def produce_distplot(path, gradebook_column, student_score, file_tag = "", out_o
         dist_curve = sns.distplot(gradebook_column, hist=False)
     except RuntimeError as re:
         #if str(re).startswith("Selected KDE bandwidth is 0. Cannot estimate density."):
-        dist_curve = sns.distplot(gradebook_column, hist=False, kde_kws={'bw': 2})
+        dist_curve = sns.distplot(gradebook_column, hist=False, kde_kws={'bw': 3})
     else:
         #raise re
         #raise RuntimeError
-        dist_curve = sns.distplot(gradebook_column, hist=False, kde_kws={'bw': 2})
+        dist_curve = sns.distplot(gradebook_column, hist=False, kde_kws={'bw': 3})
 
     # if we are not generating the overall report, we now highlight the bar that represents the
     # student's score on the exam.
@@ -113,12 +113,12 @@ def produce_hist(path, gradebook_column, student_score, question, file_tag = "",
     a detailed graph pertaining to their score on the exam.
 
     input:
-    path: Path to where the images subfolder will be made to contain the pngs that are produced. (str)
-    gradebook_column: the column of the gradebook to visualize (pd.Series)
-    student_score: the individual student's score (this will be metadata in the Overall/Admin report) (int)
-    file_tag: additional file name information. (str)
-    out_of: Number of points the question is out of (int)
-    admin: Whether of not we are producing the Overall/Admin report (boolean)
+    path:             Path to where the images subfolder will be made to contain the pngs that are produced. (str)
+    gradebook_column: The column of the gradebook to be visualized (pd.Series)
+    student_score:    The individual student's score (this will be metadata in the Overall/Admin report) (int)
+    file_tag:         Additional file name information (str)
+    out_of:           Total points of the question (int)
+    admin:            Whether of not we are producing the Overall/Admin report (boolean)
 
     returns:
     student_score: Score student got on this question.
@@ -151,6 +151,7 @@ def produce_hist(path, gradebook_column, student_score, question, file_tag = "",
     # this is the way we handle the red patch in these scores, we know that
     # the corresponding bar will be the one we want to paint red instead of
     # grey.
+
     clrs = ['red' if x == student_score else 'grey' for x in scores]
 
     # to check if we are using the right colors
@@ -219,7 +220,7 @@ def section_total(df, section_name, exam_structure):
     online because we can generate it here, and also reduces the chance for user error
     when entering in numbers.
 
-    Note that this foces the datatype to 'int64', as well as creating a new column that
+    Note that this forces the datatype to 'int64', as well as creating a new column that
     is the sum of the questions in that section, with the column name section_name + ' Total'
     i.e., 'Building the Forest Total'. Returns the whole dataframe with the updated columns.
 
@@ -316,9 +317,10 @@ def fmt_section(path, pdf, section_name, section_str, gradebook,
         # We know the setion_name should be a column, this might be able to be refactored into just keying into the DF/series
         comment_col = [col for col in gradebook.columns if section_name in col and "Total" not in col]
         print(exam_to_process[comment_col].values[0])
-        comment_typecast = str(exam_to_process[comment_col].values[0]).encode('UTF-8', 'ignore')
-        comment_typecast = comment_typecast[slice(2, len(comment_typecast)-1)]
-        comment = "TA Comment: %s"%(comment_typecast)
+        #comment_typecast = str(exam_to_process[comment_col].values[0]).encode('UTF-8', 'ignore')
+        comment_typecast = exam_to_process[comment_col].values[0]
+        #comment_typecast = comment_typecast[slice(2, len(comment_typecast)-1)]
+        comment = "Grader Comment: {}".format(comment_typecast)
 
         score_report = "\nScore: %s/%s"%(exam_to_process[section_name + " Total"], out_of)
 
@@ -405,16 +407,16 @@ def fmt_question(path, pdf, question_name, question_text, gradebook,
     order to section them off.
 
     inputs:
-    path: path to parent folder (str)
-    pdf: the pyPDF object that represents the current report (FPDF)
-    section_name: the name of the section we are currently formatting (str)
-    section_str: the nested dictionary contained at exam_str[section_name][0] (dict)
-    gradebook: the gradebook we are processing (pd.DataFrame)
+    path:            path to parent folder (str)
+    pdf:             the pyPDF object that represents the current report (FPDF)
+    section_name:    the name of the section we are currently formatting (str)
+    section_str:     the nested dictionary contained at exam_str[section_name][0] (dict)
+    gradebook:       the gradebook we are processing (pd.DataFrame)
     exam_to_process: the individual student's exam (or overall report) we are processing (pd.Series)
-    out_of: Score that the section is out of, stored in exam_str[section_name][1] (int)
+    out_of: Score    that the section is out of, stored in exam_str[section_name][1] (int)
     percentile_dict: the dictionary containing percentile information for the exam (dict)
-    align: what the current alignment is (str)
-    admin: whether or not we are generating the overall report (boolean)
+    align:           what the current alignment is (str)
+    admin:           whether or not we are generating the overall report (boolean)
 
     returns:
     None: modifies original fPDF object.
@@ -440,12 +442,13 @@ def fmt_question(path, pdf, question_name, question_text, gradebook,
         	question_name, file_tag = file_tag, out_of = out_of, admin = admin)
 
     else:
-        comment_typecast = str(exam_to_process[question_name + 
-        	" Comment"].encode('UTF-8', 'ignore'))
-        comment_typecast = comment_typecast[slice(2, len(comment_typecast)-1)]
-        comment = "TA Comment: %s"%(comment_typecast)
+        #comment_typecast = str(exam_to_process[question_name + 
+        #	" Comment"].encode('UTF-8', 'ignore'))
+        comment_typecast = exam_to_process[question_name + " Comment"]
+        #comment_typecast = comment_typecast[slice(2, len(comment_typecast)-1)]
+        comment = "Grader Comment: {}".format(comment_typecast)
 
-        score_report = "\nScore: %s/%s"%(exam_to_process[question_name], out_of)
+        score_report = "\nScore: {}/{}".format(exam_to_process[question_name], out_of)
 
         produce_hist(path, gradebook[question_name], 
         	exam_to_process[question_name], question_name, 
@@ -632,7 +635,7 @@ def process_gradebook(gradebook, student_keys, exam_str, path="./", admin_only =
     # get the name of the exam, i.g. 'Python Exam'
     tag = list(exam_str.keys())[0]
 
-    print("*"*50, "\n", tag, "\n", "*"*50)
+    print("*"*25, "\n", tag, "\n", "*"*25)
 
     # empty bracket 
     to_sum = []
@@ -641,6 +644,7 @@ def process_gradebook(gradebook, student_keys, exam_str, path="./", admin_only =
 
     # here we use exam_str to parse the exam into questions and sections.
     print("Processing " + tag + ' Structure:')
+
     for item in exam_str[tag][0].items():
         print("Inside for-loop, currently on ", item)
 
@@ -710,6 +714,7 @@ def process_gradebook(gradebook, student_keys, exam_str, path="./", admin_only =
             process_single_report(path = path, student_id = student_id, gradebook = gradebook_names,
                                    exam_str = exam_str, percentile_dict = percentile_dict)
             i += 1
+
         print("Processing Admin Report")
         process_single_report(path = path, student_id = "Admin"+tag, gradebook = gradebook_names,
                               exam_str = exam_str, percentile_dict = percentile_dict, admin = True)
@@ -746,7 +751,7 @@ def process_single_report(path, student_id, gradebook, exam_str, percentile_dict
 
 
     if admin:
-        # We want to get some meta-data in order view different aspects of the overall report,
+        # We want to get some meta-data in order to view different aspects of the overall report,
         # the basic statistics we aggregate are median and mean for each question.
         exam_to_process = gradebook.agg(["median", 'mean'])
         total_score_mean = exam_to_process.loc['mean', 'Total Score']

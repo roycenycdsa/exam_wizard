@@ -42,4 +42,4 @@ sample_exam = exam_details[exam_details['name'] == exam_name]['structure'].value
 
 # process the gradebook
 rp.process_gradebook(gradebook = gradebook, student_keys = student_key,
-                     exam_str = sample_exam, path = sub_path)
+                     exam_str = sample_exam, path = sub_path, admin_only= False)
