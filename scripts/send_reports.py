@@ -56,7 +56,7 @@ if __name__ == '__main__':
                         sender = admin_email,
                         to = std.email.strip(),
                         subject = f'{exam_name} Grade Report',
-                        msg = f'Hello {std["name"]}\nAttached is your Grade Report for {exam_name}\nPlease contact your grading TA with any questions.',
+                        msg = f'Hello {std["name"]}\nAttached is your Grade Report for {exam_name}\nPlease contact your grader with any questions.',
                         file_dir = report_path,
                         filenames = [b])
 
