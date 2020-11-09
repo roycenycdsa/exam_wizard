@@ -322,7 +322,7 @@ def fmt_section(path, pdf, section_name, section_str, gradebook,
         #comment_typecast = comment_typecast[slice(2, len(comment_typecast)-1)]
         comment = "Grader Comment: {}".format(comment_typecast)
 
-        score_report = "\nScore: %s/%s"%(exam_to_process[section_name + " Total"], out_of)
+        score_report = "\nScore: {}/{}".format(exam_to_process[section_name + " Total"], out_of)
 
         produce_distplot(path, gradebook[section_name + " Total"], exam_to_process[section_name + " Total"], file_tag = file_tag, out_of = out_of)
 
