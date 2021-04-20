@@ -1,16 +1,26 @@
-import configparser
-import io
+import sys, configparser
+sys.path.append('.')
+from examwiz_pkg.examwiz_pkg.gapi_app import grade_book as gb
+import pandas as pd
 
+# getting the path of the file
+sub_path = sys.argv[1]
+sub_path = r'{}'.format(sub_path)
 
+# Get the config file of the exam
 config = configparser.ConfigParser()
-config.read('structure_files/config.ini')
+config.read(sub_path + '/config.ini')
 
-cred_path = config['googAPI']['cred_path']
-print(cred_path)
+# get the name of the exams
+exam_name = config['exams']['name']
 
-sub = config['']
+# get the file_id of the gradebook so that we will be able to access the gradebook
+file_id = config['exams']['gradebook']
 
+#book = gb.read_grade_book(exam_name)
 
+# get the gradebook
+book = gb.read_by_id(file_id)
 
 #
 # #config.readfp(io.BytesIO(sample_config))

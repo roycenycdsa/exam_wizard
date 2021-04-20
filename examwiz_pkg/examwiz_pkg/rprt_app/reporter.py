@@ -810,7 +810,7 @@ def process_single_report(path, student_id, gradebook, exam_str, percentile_dict
         print("*"*50, "\n", path, "\n", "*"*50)
 
         # create a distribution for the overall score.
-        produce_distplot(path, gradebook['Total Score'].astype(int), 
+        produce_distplot(path, gradebook['Total Score'].astype(float), 
         	exam_to_process['Total Score'], file_tag = "Overall_Graph", out_of = out_of)
 
     

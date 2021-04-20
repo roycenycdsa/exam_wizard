@@ -30,8 +30,67 @@
         }
     },
     {
-        "name": "Example Exam",
-        "structure": {}
+        "name": "R Exam",
+        "structure": {
+            "R Exam": [
+                {
+                    "Problem 1": [
+                        "Loading Data Frames",
+                        5
+                    ],
+                    "Problem 2": [
+                        "Filtering Observations",
+                        5
+                    ],
+                    "Problem 3": [
+                        "Reshaping Columns",
+                        10
+                    ],
+                    "Problem 4": [
+                        "Renaming Column",
+                        6
+                    ],
+                    "Problem 5": [
+                        "Cleaning up the Text",
+                        5
+                    ],
+                    "Problem 6": [
+                        "Converting Column Type",
+                        5
+                    ],
+                    "Problem 7": [
+                        "Casting Column to Date",
+                        6
+                    ],
+                    "Problem 8": [
+                        "Creating Year and Month Column",
+                        6
+                    ],
+                    "Problem 9": [
+                        "Computing the Monthly Carloads",
+                        6
+                    ],
+                    "Problem 10": [
+                        "Joining Two Dataframes",
+                        6
+                    ],
+                    "Problem 11": [
+                        "Visualizing Monthly Carloads",
+                        10
+                    ],
+                    "Problem 12": [
+                        "Determining Correlation",
+                        15
+                    ],
+                    "Problem 13": [
+                        "Plotting Scatter Plot",
+                        15
+                    ]
+
+                },
+                100
+            ]
+        }
     },
     {
         "name": "R Midterm",

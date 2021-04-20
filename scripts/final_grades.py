@@ -31,7 +31,8 @@ question_cols = list(filter(lambda l: 'Comment' not in l and ('Question' in l or
 
 #print(question_cols)
 
-book['Final Grade'] = book[question_cols].astype('int32').sum(axis=1)
+#book['Final Grade'] = book[question_cols].astype('int32').sum(axis=1)
+book['Final Grade'] = book[question_cols].astype(float).sum(axis=1)
 book = book[['Student ID', 'Final Grade']]
 
 #print(book['Final Grade'])

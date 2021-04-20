@@ -25,9 +25,13 @@ def read_by_id(file_id):
         spreadsheetId=file_id, range='Form Responses 1').execute()
 
     # check the dimensions of the columns
+    #print(result['values'][1:][0])
+
     num_col1 = len(result['values'][0])
+    #print(num_col1)
 
     num_col2 = len(result['values'][1:][0])
+    #print(num_col2)
 
     num_col = min(num_col1, num_col2)
 
