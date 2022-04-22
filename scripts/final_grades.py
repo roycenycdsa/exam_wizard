@@ -1,6 +1,6 @@
 import sys, configparser
 sys.path.append('.')
-from examwiz_pkg.examwiz_pkg.gapi_app import grade_book as gb
+from examwiz_pkg.gapi_app import grade_book as gb
 import pandas as pd
 
 # getting the path of the file

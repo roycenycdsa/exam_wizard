@@ -178,15 +178,15 @@
                         {
                             "Subquestion 1": [
                                 "Counting the Data",
-                                5
+                                4
                             ],
                             "Subquestion 2": [
-                                "Compare Ratings",
-                                5
+                                "Distribution of Count of Ratings",
+                                4
                             ],
                             "Subquestion 3": [
-                                "Active Users and Popular Restaurants",
-                                5
+                                "Count vs Mean",
+                                4
                             ],
                             "Subquestion 4": [
                                 "Train a Logistic Regression",
@@ -194,51 +194,63 @@
                             ],
                             "Subquestion 5": [
                                 "Create a Null Model",
-                                5
+                                4
                             ]
                         },
-                        30
+                        22
                     ],
                     "Building the Forest": [
                         {
                             "Step 1": [
-                                "Combining User Data",
+                                "User Profiles",
                                 5
                             ],
                             "Step 2": [
-                                "Combining Location Data",
-                                5
+                                "User Payments",
+                                3
                             ],
                             "Step 3": [
-                                "Merging User and Location Data",
-                                5
+                                "User Cuisines",
+                                3
                             ],
                             "Step 4": [
-                                "Report Missingness",
+                                "Profiles Combined",
                                 5
                             ],
                             "Step 5": [
-                                "Train the Forest",
-                                10
+                                "Geo Places",
+                                3
                             ],
                             "Step 6": [
-                                "Grid Search",
-                                20
+                                "Restaurant Parking",
+                                2
                             ],
                             "Step 7": [
-                                "Verifying Your Results",
-                                15
+                                "Restaurant Payments and Cuisines",
+                                6
                             ],
                             "Step 8": [
-                                "Feature Importance",
+                                "Places Combined",
                                 5
                             ],
                             "Step 9": [
-                                "Extra Credit",
-                                0
+                                "Merge Data",
+                                6
+                            ],
+                            "Step 10": [
+                                "Label Encoding and Missing Values",
+                                12
+                            ],
+                            "Step 11": [
+                                "Random Forest",
+                                20
+                            ],
+                            "Step 12": [
+                                "Feature Importance",
+                                8
                             ]
                         },
-                        70
+                        78
                     ]
                 },
                 100

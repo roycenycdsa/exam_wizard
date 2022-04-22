@@ -1,8 +1,8 @@
 import sys, os, time
 sys.path.append('.')
 import pandas as pd
-from examwiz_pkg.examwiz_pkg.rprt_app import reporter as rp
-from examwiz_pkg.examwiz_pkg.gapi_app import mailer as ml
+from examwiz_pkg.rprt_app import reporter as rp
+from examwiz_pkg.gapi_app import mailer as ml
 import configparser
 
 

@@ -1,8 +1,8 @@
 import sys
 import pandas as pd
 sys.path.append('.')
-from examwiz_pkg.examwiz_pkg.rprt_app import reporter as rp
-from examwiz_pkg.examwiz_pkg.gapi_app import grade_book as gb
+from examwiz_pkg.rprt_app import reporter as rp
+from examwiz_pkg.gapi_app import grade_book as gb
 import configparser
 
 #######################################################################
